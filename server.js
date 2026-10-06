@@ -9,6 +9,9 @@ const { getDatabase } = require('firebase-admin/database');
 let serviceAccount;
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    if (serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
 } else {
     serviceAccount = require('./serviceAccountKey.json');
 }
@@ -77,6 +80,7 @@ app.post('/api/reset-password', async (req, res) => {
 });
 
 app.get('/api/data', async (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.json(await getDB());
 });
 
@@ -86,8 +90,13 @@ app.post('/api/data', async (req, res) => {
         return res.status(401).json({ error: 'Unauthorized' });
     }
     const newData = req.body;
-    await saveDB(newData);
-    res.json({ success: true });
+    try {
+        await saveDB(newData);
+        res.json({ success: true });
+    } catch (error) {
+        console.error("SaveDB Error:", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 // Existing Verify API for backward compatibility, now using the DB
