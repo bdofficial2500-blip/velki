@@ -10,8 +10,8 @@ initializeApp({
 const dbRef = getDatabase();
 
 async function check() {
-    const snap = await dbRef.ref('siteData').once('value');
-    console.log('siteData in DB:', Object.keys(snap.val() || {}));
+    const snap = await dbRef.ref('agents').once('value');
+    console.log('agents in DB:', snap.val());
     process.exit(0);
 }
 check();

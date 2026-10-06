@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Velki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans Bengali', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm border border-gray-200">
+        <div class="text-center mb-6">
+            <div class="bg-[#0b192c] text-white font-bold text-2xl py-3 rounded-lg mb-2">VELKI ADMIN</div>
+            <p class="text-sm text-gray-500">লগইন করুন</p>
+        </div>
+        
+        <div id="error-msg" class="hidden bg-red-50 text-red-600 text-sm p-3 rounded mb-4 text-center border border-red-200"></div>
+
+        <form id="login-form">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">ইউজারনেম (Username)</label>
+                <input type="text" id="username" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required placeholder="Enter username">
+            </div>
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-gray-700 text-sm font-bold">পাসওয়ার্ড (Password)</label>
+                    <a href="#" id="forgot-btn" class="text-xs text-blue-600 hover:underline">Forgot Account?</a>
+                </div>
+                <input type="password" id="password" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded transition shadow">
+                লগইন (Login)
+            </button>
+        </form>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="reset-modal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm">
+            <h3 class="font-bold text-lg mb-4">রিসেট পাসওয়ার্ড (Reset Password)</h3>
+            <div id="reset-error" class="hidden bg-red-50 text-red-600 text-xs p-2 rounded mb-3 border border-red-200"></div>
+            <div id="reset-success" class="hidden bg-green-50 text-green-700 text-xs p-2 rounded mb-3 border border-green-200">পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে!</div>
+            
+            <div class="mb-3">
+                <label class="block text-xs font-bold mb-1">ইউজারনেম</label>
+                <input type="text" id="reset-username" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" placeholder="esanmalik">
+            </div>
+            <div class="mb-3">
+                <label class="block text-xs font-bold mb-1">সিক্রেট পিন (Secret PIN)</label>
+                <input type="password" id="reset-pin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm" placeholder="205069">
+            </div>
+            <div class="mb-4">
+                <label class="block text-xs font-bold mb-1">নতুন পাসওয়ার্ড</label>
+                <input type="password" id="reset-new-password" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm">
+            </div>
+            
+            <div class="flex gap-2 justify-end">
+                <button type="button" id="close-modal" class="px-3 py-1.5 bg-gray-200 rounded text-sm hover:bg-gray-300">বাতিল</button>
+                <button type="button" id="submit-reset" class="px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">রিসেট করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('reset-modal');
+        document.getElementById('forgot-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+        });
+        document.getElementById('close-modal').addEventListener('click', () => {
+            modal.classList.add('hidden');
+            document.getElementById('reset-error').classList.add('hidden');
+            document.getElementById('reset-success').classList.add('hidden');
+        });
+        document.getElementById('submit-reset').addEventListener('click', async () => {
+            const u = document.getElementById('reset-username').value;
+            const p = document.getElementById('reset-pin').value;
+            const np = document.getElementById('reset-new-password').value;
+            const err = document.getElementById('reset-error');
+            const succ = document.getElementById('reset-success');
+            
+            err.classList.add('hidden');
+            succ.classList.add('hidden');
+            
+            if(!u || !p || !np) {
+                err.textContent = 'সবগুলো তথ্য দিন!';
+                err.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newUsername: u, pin: p, newPassword: np })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    succ.classList.remove('hidden');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        document.getElementById('username').value = u; document.getElementById('password').value = np;
+                    }, 2000);
+                } else {
+                    err.textContent = data.message;
+                    err.classList.remove('hidden');
+                }
+            } catch(e) {
+                err.textContent = 'সার্ভার এরর!';
+                err.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const err = document.getElementById('error-msg');
+            
+            err.classList.add('hidden');
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = '/admin';
+                } else {
+                    err.textContent = data.message || 'ভুল ইউজারনেম বা পাসওয়ার্ড!';
+                    err.classList.remove('hidden');
+                }
+            } catch(e) {
+                err.textContent = 'সার্ভার এরর! আবার চেষ্টা করুন।';
+                err.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
