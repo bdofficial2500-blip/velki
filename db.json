@@ -1,0 +1,177 @@
+{
+  "siteData": {
+    "customerServiceNumber": "+8801666666666",
+    "customerServiceText": "যেকোনো ধরনের অভিযোগ, অনুসন্ধান বা পরামর্শের জন্য আমাদের ২৪/৭ সরাসরি লাইভ সাপোর্ট সেন্টারে চ্যাট করুন।",
+    "customerServiceList": [
+      {
+        "name": "CUSTOMER SERVICE",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "CUSTOMER SERVICE",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "CUSTOMER SERVICE",
+        "whatsapp": "+88016111111111"
+      }
+    ],
+    "velkiAdminList": [
+      {
+        "name": "AKAKSH MALIK",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "MONIR KHAN",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "TONMOY HASAN",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "ESAN MALIN",
+        "whatsapp": "+88016111111111"
+      },
+      {
+        "name": "RAJU BHAI",
+        "whatsapp": "+88016111111111"
+      }
+    ],
+    "quickAgents": [
+      {
+        "id": "25",
+        "whatsapp": "+88016666666666"
+      },
+      {
+        "id": "27",
+        "whatsapp": "+88016666666666"
+      },
+      {
+        "id": "29",
+        "whatsapp": "+88016666666666"
+      }
+    ],
+    "proxyLinks": "",
+    "aboutVelki": "শুধুমাত্র আমাদের অফিসিয়াল ওয়েব পেজে প্রদত্ত ভেরিফাইড হোয়াটসঅ্যাপ নাম্বারের মাধ্যমেই যোগাযোগ করুন। ফেসবুক, টেলিগ্রাম বা অন্য কোনো সোশ্যাল প্ল্যাটফর্মে ভুয়া আইডি/এজেন্টের মাধ্যমে লেনদেন করলে ভেলকি কর্তৃপক্ষ দায়ী থাকবে অনলাইনে যোগাযোগ করুন।",
+    "rules": "শুধুমাত্র আমাদের অফিসিয়াল ওয়েব পেজে প্রদত্ত ভেরিফাইড হোয়াটসঅ্যাপ নাম্বারের মাধ্যমেই যোগাযোগ করুন। ফেসবুক, টেলিগ্রাম বা অন্য কোনো সোশ্যাল প্ল্যাটফর্মে ভুয়া আইডি/এজেন্টের মাধ্যমে লেনদেন করলে ভেলকি কর্তৃপক্ষ দায়ী থাকবে অনলাইনে যোগাযোগ করুন।"
+  },
+  "agents": [
+    {
+      "id": "767",
+      "name": "Raju Mia 1",
+      "type": "master",
+      "phone": "+855967046178",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "1131",
+      "name": "Monir",
+      "type": "master",
+      "phone": "+855967039501",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "2097",
+      "name": "tonmoy",
+      "type": "master",
+      "phone": "+60178337870",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "344",
+      "name": "karim",
+      "type": "super",
+      "phone": "+601116875223",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "257",
+      "name": "masud",
+      "type": "super",
+      "phone": "+85515827508",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "194",
+      "name": "arif",
+      "type": "master",
+      "phone": "+601139439618",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "129",
+      "name": "rakib",
+      "type": "master",
+      "phone": "+855968932241",
+      "complain": "+447520636263",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "333",
+      "name": "Aminul",
+      "type": "master",
+      "phone": "01855454564",
+      "complain": "",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "200",
+      "name": "Esan Malik",
+      "type": "subadmin",
+      "phone": "+8801611111111",
+      "complain": "+88011111111",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "555",
+      "name": "Nur Alam",
+      "type": "master",
+      "phone": "+8801655555555",
+      "complain": "+8801666666666",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    },
+    {
+      "id": "666",
+      "name": "Faruk Ali",
+      "type": "master",
+      "phone": "+8801699999999",
+      "complain": "+8801666666666",
+      "apps": [
+        "VELKI .LIVE"
+      ]
+    }
+  ],
+  "chat": [],
+  "admin": {
+    "username": "esanmalik",
+    "password": "esanmalik123",
+    "secretPin": "205069"
+  }
+}

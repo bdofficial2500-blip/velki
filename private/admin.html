@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Velki Admin Panel</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0b192c',
+                        'nav-dark': '#06101e',
+                        'accent-gold': '#facc15',
+                        'accent-green': '#22c55e',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans Bengali', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans flex min-h-screen">
+    
+    <!-- Sidebar -->
+    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary-dark text-white flex flex-col transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-5 flex items-center gap-3 border-b border-gray-800">
+            <img src="logo.jpg" class="w-8 h-8 rounded-full border border-accent-gold">
+            <h2 class="font-bold text-lg tracking-wide text-accent-gold">VELKI ADMIN</h2>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-3 text-left px-4 py-3 rounded bg-blue-600 text-white font-medium transition">
+                <i class="fa-solid fa-chart-pie w-5"></i> ড্যাশবোর্ড
+            </button>
+            <button onclick="switchTab('agents')" class="tab-btn w-full flex items-center gap-3 text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 font-medium transition">
+                <i class="fa-solid fa-users w-5"></i> এজেন্ট ম্যানেজমেন্ট
+            </button>
+            <button onclick="switchTab('content')" class="tab-btn w-full flex items-center gap-3 text-left px-4 py-3 rounded hover:bg-gray-800 text-gray-300 font-medium transition">
+                <i class="fa-solid fa-file-lines w-5"></i> ওয়েব কন্টেন্ট (টেক্সট)
+            </button>
+        </nav>
+        
+        <div class="p-4 border-t border-gray-800">
+            <button onclick="logout()" class="w-full flex items-center gap-3 text-left px-4 py-2 rounded hover:bg-red-600 text-gray-300 hover:text-white transition">
+                <i class="fa-solid fa-sign-out-alt w-5"></i> লগআউট
+            </button>
+        </div>
+    </aside>
+
+    <!-- Mobile Overlay -->
+    <div id="mobile-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 p-4 flex justify-between items-center z-10">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 text-xl"><i class="fa-solid fa-bars"></i></button>
+                <h1 id="page-title" class="font-bold text-xl text-gray-800">অ্যাডমিন প্যানেল</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <i class="fa-solid fa-bell text-gray-500 text-xl cursor-pointer hover:text-blue-600"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">৩</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200">A</div>
+            </div>
+        </header>
+        
+        <!-- Content Area -->
+        <div class="flex-1 p-4 sm:p-6 bg-gray-50">
+            
+            <!-- Dashboard Tab -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div><p class="text-gray-500 text-sm font-medium mb-1">মোট এজেন্ট</p><h3 id="total-agents" class="text-2xl font-bold text-gray-800">১৫০+</h3></div>
+                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-xl"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div><p class="text-gray-500 text-sm font-medium mb-1">নতুন চ্যাট মেসেজ</p><h3 class="text-2xl font-bold text-gray-800">৩</h3></div>
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 text-xl"><i class="fa-solid fa-comments"></i></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div><p class="text-gray-500 text-sm font-medium mb-1">আজকের ভিজিটর</p><h3 class="text-2xl font-bold text-gray-800">১,২৪০</h3></div>
+                        <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600 text-xl"><i class="fa-solid fa-eye"></i></div>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-5">
+                    <h3 class="font-bold text-blue-800 mb-2"><i class="fa-solid fa-info-circle mr-2"></i> সিস্টেম আপডেট চলছে</h3>
+                    <p class="text-sm text-blue-700">ওয়েবসাইটটিকে স্ট্যাটিক (HTML) থেকে সম্পূর্ণ ডায়নামিক (Database-driven) করার কাজ চলছে। ডাটাবেজ কানেকশন শেষ হলে এখান থেকেই সব কিছু লাইভ পরিবর্তন করা যাবে।</p>
+                </div>
+            </div>
+
+            <!-- Agents Tab -->
+            <div id="tab-agents" class="tab-content hidden space-y-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">এজেন্ট লিস্ট ম্যানেজমেন্ট</h2>
+                    <div class="flex gap-2">
+                        <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold hover:bg-green-600 transition flex gap-2 items-center"><i class="fa-solid fa-save"></i> সেভ করুন</button>
+                        <button onclick="addNewAgent()" class="bg-primary-dark text-white px-4 py-2 rounded shadow text-sm font-medium hover:bg-nav-dark transition flex gap-2 items-center"><i class="fa-solid fa-plus"></i> নতুন এজেন্ট যোগ করুন</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-4 border-b border-gray-200 flex gap-4 bg-gray-50">
+                        <input type="text" placeholder="আইডি দিয়ে খুঁজুন..." class="border border-gray-300 rounded px-3 py-1.5 text-sm w-full max-w-xs focus:ring-1 focus:ring-blue-500 outline-none">
+                        <select class="border border-gray-300 rounded px-3 py-1.5 text-sm outline-none">
+                            <option>সব টাইপ</option>
+                            <option>সুপার এজেন্ট</option>
+                            <option>মাস্টার এজেন্ট</option>
+                            <option>সাব এডমিন</option>
+                        </select>
+                    </div>
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600">
+                                <th class="p-3 border-b">ID</th>
+                                <th class="p-3 border-b">Name</th>
+                                <th class="p-3 border-b">Type</th>
+                                <th class="p-3 border-b">Phone</th>
+                                <th class="p-3 border-b">Status</th>
+                                <th class="p-3 border-b text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agents-tbody"></tbody>
+                    </table></div>
+                </div>
+            </div>
+
+            <!-- Content Tab -->
+            <div id="tab-content" class="tab-content hidden space-y-6">
+                <h2 class="text-lg font-bold text-gray-800">ওয়েবসাইটের তথ্য সম্পাদনা</h2>
+                
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">কাস্টমার সার্ভিস (Customer Service)</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Support Number -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">প্রধান সাপোর্ট নাম্বার (Header & Footer)</label>
+                            <div class="flex gap-2 max-w-sm mb-4">
+                                <input type="text" id="input-support-number" class="w-full border border-gray-300 rounded p-2 text-sm">
+                                <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold whitespace-nowrap">???</button>
+                            </div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">কাস্টমার সার্ভিস টেক্সট</label>
+                            <textarea id="input-support-text" class="w-full border border-gray-300 rounded p-2 text-sm" rows="2"></textarea>
+                            <div class="mt-2">
+                                <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold whitespace-nowrap">সেভ</button>
+                            </div>
+                        </div>
+
+                        <!-- Customer Service List -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-bold text-gray-700">কাস্টমার সার্ভিস লিস্ট</label><button onclick="addCustomerService()" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold hover:bg-blue-200">+ অ্যাড করুন</button>
+                            </div>
+                            <div class="border border-gray-200 rounded overflow-hidden">
+                                <div class="overflow-x-auto"><table class="w-full text-left text-xs sm:text-sm min-w-[500px]"><thead class="bg-gray-50 text-gray-600 border-b"><tr><th class="p-2">Name</th><th class="p-2">WhatsApp Number</th><th class="p-2 text-right">Action</th></tr></thead><tbody id="cs-list-tbody"></tbody></table></div>
+                            </div>
+                        </div>
+
+                        <!-- Velki Admin List -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-bold text-gray-700">ভেলকি এডমিন লিস্ট (VELKI ADMIN LIST)</label><button onclick="addAdminList()" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold hover:bg-blue-200">+ অ্যাড করুন</button>
+                            </div>
+                            <div class="border border-gray-200 rounded overflow-hidden">
+                                <div class="overflow-x-auto"><table class="w-full text-left text-xs sm:text-sm min-w-[500px]"><thead class="bg-gray-50 text-gray-600 border-b"><tr><th class="p-2">Name</th><th class="p-2">WhatsApp Number</th><th class="p-2 text-right">Action</th></tr></thead><tbody id="admin-list-tbody"></tbody></table></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">কুইক এজেন্ট (Quick Agents)</h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                <h4 class="font-bold text-sm mb-2">Quick Agent 1 (মাস্টার)</h4>
+                                <label class="block text-xs text-gray-600 mb-1">Agent ID</label>
+                                <input type="text" id="qa-1-id" class="w-full border border-gray-300 rounded p-1.5 text-sm mb-2">
+                                <label class="block text-xs text-gray-600 mb-1">WhatsApp Number</label>
+                                <input type="text" id="qa-1-wa" class="w-full border border-gray-300 rounded p-1.5 text-sm">
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                <h4 class="font-bold text-sm mb-2">Quick Agent 2 (মাস্টার)</h4>
+                                <label class="block text-xs text-gray-600 mb-1">Agent ID</label>
+                                <input type="text" id="qa-2-id" class="w-full border border-gray-300 rounded p-1.5 text-sm mb-2">
+                                <label class="block text-xs text-gray-600 mb-1">WhatsApp Number</label>
+                                <input type="text" id="qa-2-wa" class="w-full border border-gray-300 rounded p-1.5 text-sm">
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                <h4 class="font-bold text-sm mb-2">Quick Agent 3 (মাস্টার)</h4>
+                                <label class="block text-xs text-gray-600 mb-1">Agent ID</label>
+                                <input type="text" id="qa-3-id" class="w-full border border-gray-300 rounded p-1.5 text-sm mb-2">
+                                <label class="block text-xs text-gray-600 mb-1">WhatsApp Number</label>
+                                <input type="text" id="qa-3-wa" class="w-full border border-gray-300 rounded p-1.5 text-sm">
+                            </div>
+                        </div>
+                        <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold">সেভ করুন</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">অন্যান্য পপআপ কন্টেন্ট</h3>
+                    <div class="space-y-4">
+                        <select id="content-selector" onchange="loadSelectedContent()" class="w-full border border-gray-300 rounded p-2 text-sm bg-gray-50 outline-none">
+                            <option>প্রক্সি লিংক (Proxy Links)</option>
+                            <option>ভেলকি কি? (About Velki)</option>
+                            <option>নিয়ম কানুন (Rules/Policies)</option>
+                        </select>
+                        <textarea id="content-editor" onchange="updateSelectedContent()" rows="6" class="w-full border border-gray-300 rounded p-2 text-sm font-mono text-gray-600" placeholder="HTML কোড বা টেক্সট লিখুন..."></textarea>
+                        <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold">সেভ করুন</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            if(sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function logout() {
+            document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.href = '/login.html';
+        }
+
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Remove active classes
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('hover:bg-gray-800', 'text-gray-300');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            // Close mobile menu if open
+            if(window.innerWidth < 768) {
+                const sidebar = document.getElementById('admin-sidebar');
+                if(!sidebar.classList.contains('-translate-x-full')) {
+                    toggleMobileMenu();
+                }
+            }
+            
+            // Add active class to button (requires finding the right button based on onclick string)
+            const btns = document.querySelectorAll('.tab-btn');
+            for(let btn of btns) {
+                if(btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.remove('hover:bg-gray-800', 'text-gray-300');
+                    btn.classList.add('bg-blue-600', 'text-white');
+                }
+            }
+        }
+    
+        function loadSelectedContent() {
+            if(!dbData) return;
+            const sel = document.getElementById('content-selector').selectedIndex;
+            const editor = document.getElementById('content-editor');
+            if(sel === 0) editor.value = dbData.siteData.proxyLinks;
+            if(sel === 1) editor.value = dbData.siteData.aboutVelki;
+            if(sel === 2) editor.value = dbData.siteData.rules;
+        }
+        function updateSelectedContent() {
+            if(!dbData) return;
+            const sel = document.getElementById('content-selector').selectedIndex;
+            const editor = document.getElementById('content-editor');
+            if(sel === 0) dbData.siteData.proxyLinks = editor.value;
+            if(sel === 1) dbData.siteData.aboutVelki = editor.value;
+            if(sel === 2) dbData.siteData.rules = editor.value;
+        }
+
+    </script>
+    <script>
+        let dbData = null;
+        
+        async function loadData() {
+            try {
+                const response = await fetch('/api/data?t=' + new Date().getTime());
+                dbData = await response.json();
+                
+                // Populate Dashboard
+                document.getElementById('total-agents').textContent = dbData.agents.length;
+                
+                // Populate Agents Table
+                renderAgents();
+                
+                // Populate Web Content
+                document.getElementById('input-support-number').value = dbData.siteData.customerServiceNumber;
+                document.getElementById('input-support-text').value = dbData.siteData.customerServiceText;
+                
+                renderCustomerService();
+                renderAdminList();
+                
+                // Quick Agents
+                document.getElementById('qa-1-id').value = dbData.siteData.quickAgents[0].id;
+                document.getElementById('qa-1-wa').value = dbData.siteData.quickAgents[0].whatsapp;
+                document.getElementById('qa-2-id').value = dbData.siteData.quickAgents[1].id;
+                document.getElementById('qa-2-wa').value = dbData.siteData.quickAgents[1].whatsapp;
+                document.getElementById('qa-3-id').value = dbData.siteData.quickAgents[2].id;
+                document.getElementById('qa-3-wa').value = dbData.siteData.quickAgents[2].whatsapp;
+                
+                loadSelectedContent();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        function renderAgents() {
+            const tbody = document.getElementById('agents-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            dbData.agents.forEach((agent, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-2"><input type="text" value="${agent.id}" class="border rounded px-1.5 py-1 w-full" onchange="dbData.agents[${index}].id=this.value"></td>
+                        <td class="p-2"><input type="text" value="${agent.name || ''}" class="border rounded px-1.5 py-1 w-full" onchange="dbData.agents[${index}].name=this.value"></td>
+                        <td class="p-2">
+                            <select class="border rounded px-1.5 py-1 w-full" onchange="dbData.agents[${index}].type=this.value">
+                                <option value="master" ${agent.type==='master'?'selected':''}>Master</option>
+                                <option value="super" ${agent.type==='super'?'selected':''}>Super</option>
+                                <option value="subadmin" ${agent.type==='subadmin'?'selected':''}>SubAdmin</option>
+                            </select>
+                        </td>
+                        <td class="p-2"><input type="text" value="${agent.phone}" class="border rounded px-1.5 py-1 w-full" onchange="dbData.agents[${index}].phone=this.value"></td>
+                        <td class="p-2 text-right">
+                            <button onclick="deleteAgent(${index})" class="text-red-600 hover:text-red-800 px-2"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+            });
+        }
+        
+        function renderCustomerService() {
+            const tbody = document.getElementById('cs-list-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            dbData.siteData.customerServiceList.forEach((cs, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2"><input type="text" value="${cs.name}" class="border rounded px-1 w-full" onchange="dbData.siteData.customerServiceList[${idx}].name=this.value"></td>
+                        <td class="p-2"><input type="text" value="${cs.whatsapp}" class="border rounded px-1 w-full" onchange="dbData.siteData.customerServiceList[${idx}].whatsapp=this.value"></td>
+                        <td class="p-2 text-right"><button onclick="dbData.siteData.customerServiceList.splice(${idx},1); renderCustomerService()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>`;
+            });
+        }
+        
+        function renderAdminList() {
+            const tbody = document.getElementById('admin-list-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            dbData.siteData.velkiAdminList.forEach((ad, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2"><input type="text" value="${ad.name}" class="border rounded px-1 w-full" onchange="dbData.siteData.velkiAdminList[${idx}].name=this.value"></td>
+                        <td class="p-2"><input type="text" value="${ad.whatsapp}" class="border rounded px-1 w-full" onchange="dbData.siteData.velkiAdminList[${idx}].whatsapp=this.value"></td>
+                        <td class="p-2 text-right"><button onclick="dbData.siteData.velkiAdminList.splice(${idx},1); renderAdminList()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>`;
+            });
+        }
+        
+        function addCustomerService() {
+            dbData.siteData.customerServiceList.push({name: 'CUSTOMER SERVICE', whatsapp: '+000'});
+            renderCustomerService();
+        }
+        
+        function addAdminList() {
+            dbData.siteData.velkiAdminList.push({name: 'AKAKSH MALIK', whatsapp: '+000'});
+            renderAdminList();
+        }
+        
+        function deleteAgent(index) {
+            dbData.agents.splice(index, 1);
+            renderAgents();
+            saveData();
+        }
+        
+        function addNewAgent() {
+            const id = prompt("Agent ID:");
+            const name = prompt("Agent Name:");
+            const type = prompt("Agent Type (master/super/subadmin):");
+            const phone = prompt("WhatsApp Number:");
+            if(id && type && phone) {
+                dbData.agents.push({id, name, type, phone, complain: dbData.siteData.customerServiceNumber, apps: ["VELKI .LIVE"]});
+                renderAgents();
+                saveData();
+            }
+        }
+        
+        async function saveData() {
+            dbData.siteData.customerServiceNumber = document.getElementById('input-support-number').value;
+            dbData.siteData.customerServiceText = document.getElementById('input-support-text').value;
+            
+            dbData.siteData.quickAgents[0].id = document.getElementById('qa-1-id').value;
+            dbData.siteData.quickAgents[0].whatsapp = document.getElementById('qa-1-wa').value;
+            dbData.siteData.quickAgents[1].id = document.getElementById('qa-2-id').value;
+            dbData.siteData.quickAgents[1].whatsapp = document.getElementById('qa-2-wa').value;
+            dbData.siteData.quickAgents[2].id = document.getElementById('qa-3-id').value;
+            dbData.siteData.quickAgents[2].whatsapp = document.getElementById('qa-3-wa').value;
+            
+            updateSelectedContent();
+            
+            try {
+                const response = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dbData)
+                });
+                const res = await response.json();
+                if(res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved Successfully',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

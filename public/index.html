@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Velki Verified Portal</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Custom scrollbar for sweetalert */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+    <script>
+        let dbData = null;
+        
+        async function fetchSiteData() {
+            try {
+                const response = await fetch('/api/data?t=' + new Date().getTime());
+                dbData = await response.json();
+                
+                // Initialize Quick Agents
+                generateQuickAgents();
+                
+                // Set Header and Footer support numbers
+                document.querySelectorAll('.support-number').forEach(el => {
+                    el.textContent = dbData.siteData.customerServiceNumber;
+                });
+                document.querySelectorAll('.support-link').forEach(el => {
+                    el.href = 'https://wa.me/' + dbData.siteData.customerServiceNumber.replace(/\D/g, '');
+                });
+                
+            } catch (err) {
+                console.error("Failed to fetch data:", err);
+            }
+        }
+        
+        function generateQuickAgents() {
+            if(!dbData) return;
+            const qaContainer = document.getElementById('quick-agents-wrapper');
+            if(!qaContainer) return;
+            qaContainer.innerHTML = '';
+            
+            dbData.siteData.quickAgents.forEach(qa => {
+                const agent = dbData.agents.find(a => a.id === qa.id);
+                const agentNameDisplay = (agent && agent.name) ? `Name : ${agent.name}` : `এজেন্ট আইডি: ${qa.id}`;
+                const phone = qa.whatsapp.replace(/\D/g, '');
+                
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm relative overflow-hidden';
+                div.innerHTML = `
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent-gold"></div>
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="bg-gray-50 p-2 sm:p-2.5 rounded-full border border-gray-100 shadow-sm relative">
+                            <i class="fa-solid fa-user-tie text-gray-500 text-lg sm:text-xl"></i>
+                            <div class="absolute bottom-1 right-1 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-800 text-[11px] sm:text-sm tracking-wide">${agentNameDisplay}</span>
+                            <span class="text-green-600 font-bold text-[10px] sm:text-xs">মাস্টার এজেন্ট</span>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/${phone}" target="_blank" class="bg-[#25D366] text-white p-2 sm:p-2.5 rounded-full shadow-sm hover:scale-110 transition hover:shadow-md flex items-center justify-center">
+                        <i class="fa-brands fa-whatsapp text-lg sm:text-xl"></i>
+                    </a>
+                `;
+                qaContainer.appendChild(div);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', fetchSiteData);
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0b192c',
+                        'nav-dark': '#06101e',
+                        'accent-gold': '#facc15',
+                        'accent-green': '#22c55e',
+                        'bg-light': '#f0f2f5',
+                        'card-bg': '#ffffff',
+                        'text-dark': '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans Bengali', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bg-light text-text-dark font-sans selection:bg-accent-gold selection:text-primary-dark">
+
+    <!-- Top Bar -->
+    <div class="bg-nav-dark text-gray-300 text-[10px] sm:text-[11px] py-1.5 px-3 md:px-8 flex flex-col sm:flex-row justify-between items-center border-b border-gray-700 gap-2 sm:gap-0">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-shield-check text-accent-green"></i>
+            <span class="text-center sm:text-left">অফিসিয়াল ভেরিফিকেশন পোর্টাল | নিরাপদ লেনদেনের নিশ্চয়তা</span>
+        </div>
+        <div class="flex items-center gap-3 sm:gap-4">
+            <span class="flex items-center gap-1 text-accent-gold"><i class="fa-solid fa-headset"></i> ২৪/৭ সাপোর্ট</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-primary-dark text-white px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-4 lg:gap-10">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 cursor-pointer">
+                <img src="logo.jpg" alt="Velki Logo" class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-accent-gold/50 shadow-sm object-cover">
+                <div class="flex flex-col">
+                    <span class="text-xl sm:text-2xl font-bold tracking-wider leading-none">VELKI</span>
+                    <span class="text-[8px] sm:text-[10px] text-accent-gold tracking-[0.1em] font-medium mt-0.5">VERIFIED PORTAL</span>
+                </div>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <ul class="hidden lg:flex gap-6 text-sm font-medium items-center">
+                <li class="bg-accent-gold text-primary-dark px-4 py-1.5 rounded font-bold cursor-pointer hover:bg-yellow-300 transition">এজেন্ট কে খুঁজুন</li>
+                
+                <!-- Desktop Dropdown Menu -->
+                <li class="relative group cursor-pointer">
+                    <div class="flex items-center gap-1 hover:text-accent-gold transition py-2">
+                        সকল এজেন্ট লিস্ট <i class="fa-solid fa-chevron-down text-[10px] transition-transform group-hover:rotate-180"></i>
+                    </div>
+                    <div class="absolute left-0 top-[100%] hidden group-hover:flex flex-col bg-[#0c1c33] text-white w-48 rounded shadow-xl border-t-[3px] border-accent-gold z-50">
+                        <a href="#" id="desktop-master-btn" class="px-5 py-3 hover:text-accent-gold hover:bg-[#12223a] border-b border-gray-700 transition">মাস্টার এজেন্ট লিস্ট</a>
+                        <a href="#" id="desktop-super-btn" class="px-5 py-3 hover:text-accent-gold hover:bg-[#12223a] border-b border-gray-700 transition">সুপার এজেন্ট লিস্ট</a>
+                        <a href="#" id="desktop-subadmin-btn" class="px-5 py-3 hover:text-accent-gold hover:bg-[#12223a] transition">সাব এডমিন লিস্ট</a>
+                    </div>
+                </li>
+
+                <li class="cs-btn cursor-pointer hover:text-accent-gold transition">কাস্টমার সার্ভিস</li>
+                <li class="proxy-btn cursor-pointer hover:text-accent-gold transition">প্রক্সি লিংক</li>
+                <li class="about-btn cursor-pointer hover:text-accent-gold transition">ভেলকি কি?</li>
+                <li class="rules-btn cursor-pointer hover:text-accent-gold transition">নিয়ম কানুন</li>
+            </ul>
+        </div>
+        
+        <div class="flex gap-2 sm:gap-3 items-center">
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="lg:hidden bg-gray-800 hover:bg-gray-700 w-8 h-8 sm:w-9 sm:h-9 rounded text-white flex items-center justify-center transition border border-gray-700"><i class="fa-solid fa-bars text-lg"></i></button>
+        </div>
+    <!-- Mobile Menu Container -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-[#0c1c33] text-white flex-col absolute top-full left-0 w-full z-40 shadow-xl border-t border-gray-700 transition-all duration-300">
+        <ul class="flex flex-col text-sm font-medium p-4">
+            <li class="bg-accent-gold text-primary-dark px-4 py-2.5 rounded font-bold cursor-pointer hover:bg-yellow-300 transition text-center mb-3">এজেন্ট কে খুঁজুন</li>
+            
+            <!-- Mobile Dropdown Menu -->
+            <li class="border-b border-gray-700">
+                <div id="mobile-agent-list-btn" class="flex items-center justify-between cursor-pointer hover:text-accent-gold transition py-3">
+                    <span>সকল এজেন্ট লিস্ট</span>
+                    <i id="mobile-agent-list-icon" class="fa-solid fa-chevron-down text-[10px] transition-transform duration-300"></i>
+                </div>
+                <ul id="mobile-agent-list-dropdown" class="hidden flex-col bg-[#06101e] -mx-4 px-8 py-2 space-y-3 mb-2 text-[13px]">
+                    <li><a href="#" id="mobile-master-btn" class="block hover:text-accent-gold transition text-gray-300 py-1">মাস্টার এজেন্ট লিস্ট</a></li>
+                    <li><a href="#" id="mobile-super-btn" class="block hover:text-accent-gold transition text-gray-300 py-1">সুপার এজেন্ট লিস্ট</a></li>
+                    <li><a href="#" id="mobile-subadmin-btn" class="block hover:text-accent-gold transition text-gray-300 py-1">সাব এডমিন লিস্ট</a></li>
+                </ul>
+            </li>
+
+            <li class="cs-btn cursor-pointer hover:text-accent-gold transition border-b border-gray-700 py-3">কাস্টমার সার্ভিস</li>
+            <li class="proxy-btn cursor-pointer hover:text-accent-gold transition border-b border-gray-700 py-3">প্রক্সি লিংক</li>
+            <li class="about-btn cursor-pointer hover:text-accent-gold transition border-b border-gray-700 py-3">ভেলকি কি?</li>
+            <li class="rules-btn cursor-pointer hover:text-accent-gold transition py-3">নিয়ম কানুন</li>
+        </ul>
+    </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-primary-dark text-white py-8 lg:py-14 px-4 md:px-8 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center relative z-10">
+            <div class="mb-6 md:mb-0 max-w-lg text-center md:text-left">
+                <div class="inline-flex items-center border border-accent-gold text-accent-gold rounded-full px-3 py-1 text-xs mb-5 font-medium bg-yellow-500/10">
+                    <i class="fa-solid fa-shield-halved mr-2"></i> অফিসিয়াল এজেন্ট ডাটাবেস ভেরিফিকেশন
+                </div>
+                
+                <div class="flex items-center justify-center md:justify-start gap-4 mb-2">
+                    <img src="logo.jpg" alt="Velki Logo" class="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 rounded-full shadow-lg border-2 border-accent-gold/40">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-wider">VELKI</h1>
+                </div>
+                <p class="text-accent-gold text-sm sm:text-base font-bold mb-4 tracking-wide">velkiagentlist.info</p>
+
+                <p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-2 max-w-sm mx-auto md:mx-0">প্রতারণা এড়াতে লেনদেনের পূর্বে অবশ্যই এজেন্টের আইডি অথবা মোবাইল নাম্বার দিয়ে যাচাই করুন।</p>
+                <p class="text-gray-300 text-xs sm:text-sm font-bold">১০০% বিশ্বস্ত ভেরিফাইড নেটওয়ার্ক।</p>
+            </div>
+            <a href="https://wa.me/447520636263" target="_blank" class="support-link bg-[#112240] p-3 sm:p-4 rounded-xl flex items-center gap-3 sm:gap-4 border border-gray-700/50 shadow-lg cursor-pointer hover:bg-[#162a4d] transition transform hover:scale-105 w-full md:w-auto justify-center md:justify-start block">
+                <div class="bg-[#25D366] w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center shadow-md shrink-0">
+                    <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl text-white"></i>
+                </div>
+                <div class="pr-1 sm:pr-2">
+                    <div class="text-[9px] sm:text-[10px] text-gray-400 font-bold tracking-wider mb-0.5">অফিসিয়াল সাপোর্ট (WHATSAPP)</div>
+                    <div class="text-xl sm:text-2xl font-bold text-[#25D366] flex items-center gap-1 sm:gap-2"><span class="support-number">+44 7520 636263</span> <span class="bg-[#25D366] text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded font-bold shadow-sm hidden sm:inline-block">চ্যাট</span></div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 md:px-8 py-6 lg:py-8 flex flex-col lg:flex-row gap-6 relative">
+        
+        <!-- Left Column -->
+        <div class="w-full lg:w-[65%] flex flex-col gap-6">
+            
+            <!-- Page Title Header -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-3 sm:gap-0">
+                <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                    <div class="bg-primary-dark text-accent-gold w-10 h-10 sm:w-12 sm:h-12 rounded flex items-center justify-center text-lg sm:text-xl shadow-inner shrink-0">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <div class="text-[9px] sm:text-[10px] text-gray-400 font-bold tracking-widest mb-0.5 uppercase">VERIFIED DIRECTORY</div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-primary-dark leading-tight">Find Agent / এজেন্ট খুঁজুন</h2>
+                    </div>
+                </div>
+                <div class="bg-green-50 text-green-600 text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center gap-1.5 border border-green-100 font-medium whitespace-nowrap self-start sm:self-auto ml-[52px] sm:ml-0">
+                    <i class="fa-solid fa-shield-check"></i> নিরাপদ ডিরেক্টরি
+                </div>
+            </div>
+
+            <!-- Search by ID -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-primary-dark text-white p-3 sm:p-3.5 flex justify-between items-center">
+                    <div class="font-medium text-xs sm:text-sm flex items-center gap-2"><div class="bg-[#1e3250] p-1.5 rounded hidden sm:block"><i class="fa-solid fa-id-card text-accent-gold"></i></div> এজেন্ট এর আইডি নাম্বার দিয়ে খুঁজুনঃ</div>
+                    <div class="bg-accent-gold text-primary-dark text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 rounded font-bold shadow-sm whitespace-nowrap">স্টেপ ০১</div>
+                </div>
+                <div class="p-4 sm:p-6 bg-gray-50/50">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-5">
+                        <div class="w-full sm:w-[35%]">
+                            <label class="block text-[10px] sm:text-[11px] font-bold text-gray-500 mb-1.5 tracking-wide">AGENT TYPE:</label>
+                            <div class="relative">
+                                <select id="agent-type-select" class="w-full bg-white border border-gray-300 rounded-md p-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none font-medium text-gray-700 shadow-sm">
+                                    <option value="master">মাস্টার এজেন্ট</option>
+                                    <option value="super">সুপার এজেন্ট</option>
+                                    <option value="subadmin">সাব এডমিন</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-gray-400 text-xs pointer-events-none"></i>
+                            </div>
+                        </div>
+                        <div class="w-full sm:w-[65%]">
+                            <label class="block text-[10px] sm:text-[11px] font-bold text-gray-500 mb-1.5 tracking-wide">AGENT ID:</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-search absolute left-3.5 top-3 text-gray-400"></i>
+                                <input type="text" id="agent-id-input" placeholder="যেমন: 767, 1131, 2097..." class="w-full bg-white border border-gray-300 rounded-md p-2.5 pl-10 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm font-medium">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4 mt-4 sm:mt-6 pt-4 border-t border-gray-100">
+                        <div class="text-[11px] sm:text-xs text-gray-500 flex items-center gap-1.5 font-medium"><i class="fa-regular fa-circle-check text-green-500 text-sm sm:text-base"></i> সঠিক আইডি প্রদান করে তাৎক্ষনিক স্ট্যাটাস জানুন</div>
+                        <button id="agent-id-btn" class="w-full md:w-auto bg-primary-dark hover:bg-nav-dark text-white px-8 py-2.5 rounded-md text-sm font-bold flex items-center justify-center gap-2 transition shadow-md group">SUBMIT <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Agents Banner -->
+            <div id="banner-master-btn" class="bg-primary-dark text-white rounded-lg p-4 sm:p-5 flex justify-between items-center shadow-md cursor-pointer hover:bg-[#12223a] transition border border-gray-700 mt-1 sm:mt-2 group">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="bg-accent-gold text-primary-dark w-10 h-10 sm:w-12 sm:h-12 rounded flex items-center justify-center text-xl sm:text-2xl shadow-inner shrink-0">
+                        <i class="fa-solid fa-list-ul"></i>
+                    </div>
+                    <div>
+                        <div class="font-bold text-accent-gold text-sm sm:text-lg mb-0.5 sm:mb-1">সকল মাস্টার এজেন্ট লিস্ট দেখতে ক্লিক করুন</div>
+                        <div class="text-[10px] sm:text-xs text-gray-300 leading-tight">অফিসিয়াল অনুমোদিত সকল এক্টিভ মাস্টার এজেন্টদের সার্বক্ষণিক পূর্ণাঙ্গ তালিকা</div>
+                    </div>
+                </div>
+                <div class="bg-[#1a2f4c] w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center group-hover:bg-accent-gold group-hover:text-primary-dark transition text-gray-300 shrink-0">
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Warning Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-6 mt-1 sm:mt-2 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                <h3 class="text-red-500 font-bold mb-3 flex items-center gap-2 text-base sm:text-lg"><i class="fa-solid fa-triangle-exclamation"></i> নিরাপত্তা ও সতর্কতা নির্দেশনা</h3>
+                <p class="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 leading-relaxed font-medium">
+                    শুধুমাত্র আমাদের অফিসিয়াল ওয়েব পেজে প্রদত্ত ভেরিফাইড হোয়াটসঅ্যাপ নাম্বারের মাধ্যমেই যোগাযোগ করুন। ফেসবুক, টেলিগ্রাম বা অন্য কোনো সোশ্যাল প্ল্যাটফর্মে ভুয়া আইডি/এজেন্টের মাধ্যমে লেনদেন করলে ভেলকি কর্তৃপক্ষ দায়ী থাকবে অনলাইনে যোগাযোগ করুন।
+                </p>
+                <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <div class="bg-green-50 text-green-700 text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-md border border-green-100 flex items-center gap-1.5 sm:gap-2 font-bold"><i class="fa-regular fa-circle-check"></i> আইডি যাচাই করুন</div>
+                    <div class="bg-blue-50 text-blue-700 text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-md border border-blue-100 flex items-center gap-1.5 sm:gap-2 font-bold"><i class="fa-solid fa-headset"></i> সরাসরি লিংক চ্যাট</div>
+                    <div class="bg-purple-50 text-purple-700 text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-md border border-purple-100 flex items-center gap-1.5 sm:gap-2 font-bold"><i class="fa-solid fa-shield-halved"></i> নিরাপদ ডিপোজিট</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="w-full lg:w-[35%] flex flex-col gap-6">
+            
+            <!-- Quick Agent -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible relative">
+                <div class="bg-primary-dark text-white p-3.5 flex justify-between items-center text-sm font-bold rounded-t-lg relative z-10">
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-bolt text-accent-gold"></i> QUICK AGENT</div>
+                    <div class="text-accent-gold text-[10px] sm:text-[11px] font-medium border border-accent-gold/30 px-2 py-0.5 rounded">সরাসরি যোগাযোগ</div>
+                </div>
+                <!-- Triangle pointing down from header -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-primary-dark z-20 top-[48px]"></div>
+                
+                
+                <div id="quick-agents-wrapper" class="p-4 sm:p-5 pt-8 flex flex-col gap-3 sm:gap-4 bg-gray-50/30 rounded-b-lg">
+                </div>
+            </div>
+
+            <!-- Chat with us online -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible relative mt-1 sm:mt-2">
+                <div class="bg-primary-dark text-white p-3.5 flex justify-between items-center text-sm font-bold rounded-t-lg relative z-10">
+                    <div>CHAT WITH US ONLINE</div>
+                    <i class="fa-solid fa-headset text-accent-gold text-lg"></i>
+                </div>
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-primary-dark z-20 top-[48px]"></div>
+                
+                <div class="p-4 sm:p-5 pt-8 text-center bg-gray-50/30 rounded-b-lg">
+                    <div class="bg-blue-50 rounded-lg h-32 sm:h-36 mb-4 sm:mb-5 relative overflow-hidden border border-blue-100 group flex flex-col justify-end p-2 bg-gradient-to-b from-blue-50 to-indigo-50">
+                        
+                        <!-- Gradient fade at top -->
+                        <div class="absolute top-0 left-0 right-0 h-10 bg-gradient-to-b from-blue-50 to-transparent z-10 pointer-events-none"></div>
+                        
+                        <!-- Scrolling chat container -->
+                        <div class="flex flex-col gap-2 w-full absolute bottom-8 sm:bottom-10 left-2 right-2 pr-4 animate-chat-scroll opacity-80 group-hover:opacity-100 transition duration-300">
+                            
+                            <!-- Bot Msg 1 -->
+                            <div class="flex items-start gap-1.5 max-w-[85%]">
+                                <div class="bg-[#112240] text-accent-gold w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] shadow"><i class="fa-solid fa-robot"></i></div>
+                                <div class="bg-white border border-blue-100 text-gray-700 text-[9px] sm:text-[10px] py-1.5 px-2.5 rounded-lg rounded-tl-none shadow-sm font-medium text-left leading-tight">স্বাগতম! VELKI সাপোর্ট সেন্টারে আপনাকে স্বাগতম।</div>
+                            </div>
+                            
+                            <!-- Bot Msg 2 -->
+                            <div class="flex items-start gap-1.5 max-w-[85%]">
+                                <div class="bg-[#112240] text-accent-gold w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] shadow"><i class="fa-solid fa-robot"></i></div>
+                                <div class="bg-white border border-blue-100 text-gray-700 text-[9px] sm:text-[10px] py-1.5 px-2.5 rounded-lg rounded-tl-none shadow-sm font-medium text-left leading-tight">এজেন্ট লিস্ট বা একাউন্ট সম্পর্কিত কোনো তথ্য জানতে চান?</div>
+                            </div>
+                            
+                            <!-- User Msg -->
+                            <div class="flex items-start gap-1.5 max-w-[85%] self-end flex-row-reverse mt-0.5">
+                                <div class="bg-green-500 text-white w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] shadow"><i class="fa-solid fa-user"></i></div>
+                                <div class="bg-green-50 text-green-800 border border-green-200 text-[9px] sm:text-[10px] py-1.5 px-2.5 rounded-lg rounded-tr-none shadow-sm font-medium text-right leading-tight">হ্যাঁ, সুপার এজেন্ট দরকার।</div>
+                            </div>
+
+                            <!-- Bot Msg 3 -->
+                            <div class="flex items-start gap-1.5 max-w-[85%] mt-0.5">
+                                <div class="bg-[#112240] text-accent-gold w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] shadow"><i class="fa-solid fa-robot"></i></div>
+                                <div class="bg-white border border-blue-100 text-gray-700 text-[9px] sm:text-[10px] py-1.5 px-2.5 rounded-lg rounded-tl-none shadow-sm font-medium text-left leading-tight">অবশ্যই! আমাদের মেনু থেকে সুপার এজেন্ট লিস্ট দেখতে পারেন অথবা লাইভ চ্যাট বাটনে ক্লিক করুন।</div>
+                            </div>
+
+                        </div>
+
+                        <!-- Hover Text Pill -->
+                        <div class="absolute bottom-2 sm:bottom-3 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 rounded-full font-bold shadow-lg backdrop-blur-sm shadow-black/20 group-hover:-translate-y-1 transition whitespace-nowrap z-20">আমাদের সাথে অনলাইনে চ্যাট করতে ক্লিক করুন!!</div>
+                    </div>
+                    <p class="text-[11px] sm:text-xs text-gray-500 mb-4 sm:mb-5 px-1 sm:px-2 leading-relaxed font-medium">যেকোনো ধরনের অভিযোগ, অনুসন্ধান বা পরামর্শের জন্য আমাদের ২৪/৭ সরাসরি লাইভ সাপোর্ট সেন্টারে চ্যাট করুন।</p>
+                    <button class="cs-btn w-full bg-primary-dark hover:bg-nav-dark text-white py-2 sm:py-2.5 rounded-md text-xs sm:text-sm font-bold flex justify-center items-center gap-2 transition shadow-md hover:shadow-lg">
+                        <i class="fa-regular fa-comments text-base sm:text-lg"></i> লাইভ চ্যাট শুরু করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Updates -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-visible relative mt-1 sm:mt-2">
+                <div class="bg-primary-dark text-white p-3.5 flex justify-between items-center text-sm font-bold rounded-t-lg relative z-10">
+                    <div>UPDATES</div>
+                    <i class="fa-solid fa-bullhorn text-accent-gold text-lg"></i>
+                </div>
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-primary-dark z-20 top-[48px]"></div>
+                
+                <div class="p-4 sm:p-5 pt-8 flex flex-col gap-2.5 sm:gap-3 bg-gray-50/30 rounded-b-lg">
+                    <div class="flex justify-between items-center p-3 sm:p-3.5 bg-green-50/50 rounded-md border border-green-100 hover:border-green-300 cursor-pointer transition shadow-sm">
+                        <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold text-gray-700">
+                            <div class="bg-white p-1 sm:p-1.5 rounded shadow-sm"><i class="fa-regular fa-calendar-check text-green-500 text-base sm:text-lg"></i></div> January 2026
+                        </div>
+                        <span class="bg-[#25D366] text-white text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded font-bold shadow-sm">Latest</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 sm:p-3.5 bg-white rounded-md border border-gray-200 hover:border-gray-300 cursor-pointer transition shadow-sm hover:shadow">
+                        <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold text-gray-600">
+                            <div class="bg-gray-50 p-1 sm:p-1.5 rounded border border-gray-100"><i class="fa-regular fa-calendar text-gray-400 text-base sm:text-lg"></i></div> December 2025
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] sm:text-xs text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Button -->
+    <div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center justify-center animate-bounce-slow" style="animation: bounce 3s infinite;">
+        <a href="https://wa.me/447520636263" target="_blank" class="support-link bg-[#25D366] text-white px-4 sm:px-5 py-3 sm:py-3.5 rounded-full shadow-[0_8px_30px_rgb(37,211,102,0.4)] flex items-center gap-2 sm:gap-2.5 hover:bg-[#1ebd5a] transition hover:scale-105 border-2 border-white inline-flex">
+            <i class="fa-brands fa-whatsapp text-xl sm:text-2xl"></i>
+            <span class="font-bold text-xs sm:text-sm tracking-wide hidden sm:inline">সরাসরি যোগাযোগ</span>
+            <span class="font-bold text-xs sm:text-sm tracking-wide sm:hidden">যোগাযোগ</span>
+        </a>
+    </div>
+
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+            50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        }
+        @keyframes chatScroll {
+            0% { transform: translateY(30%); }
+            100% { transform: translateY(-50%); }
+        }
+        .animate-chat-scroll {
+            animation: chatScroll 8s linear infinite;
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer class="bg-nav-dark text-gray-400 py-10 sm:py-12 px-4 md:px-8 border-t-[3px] border-accent-gold mt-8 sm:mt-10">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 text-center sm:text-left">
+            <div class="col-span-1 lg:col-span-1 flex flex-col items-center sm:items-start">
+                <div class="flex items-center gap-3 mb-4 sm:mb-5 justify-center sm:justify-start">
+                    <img src="logo.jpg" alt="Velki Logo" class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border border-accent-gold/50 shadow-sm object-cover">
+                    <div class="text-2xl sm:text-3xl font-bold tracking-wider text-white">VELKI</div>
+                </div>
+                <p class="text-[11px] sm:text-xs leading-relaxed mb-5 sm:mb-6 font-medium text-gray-400 max-w-xs">বাংলাদেশের সবচেয়ে বিশ্বস্ত ও ভেরিফাইড অনলাইন এজেন্ট ডিরেক্টরি। সর্বদা সতর্ক থেকেই যাচাই করে লেনদেন করুন।</p>
+                <a href="https://wa.me/447520636263" target="_blank" class="support-link flex items-center gap-2.5 text-[#25D366] text-xs sm:text-sm font-bold bg-[#112240] inline-flex px-3 py-2 rounded-md border border-gray-700 hover:scale-105 transition">
+                    <i class="fa-brands fa-whatsapp text-lg sm:text-xl"></i> <span class="support-number">+44 7520 636263</span>
+                </a>
+            </div>
+            
+            <div>
+                <h4 class="text-accent-gold font-bold mb-4 sm:mb-5 text-[13px] sm:text-sm uppercase tracking-wider flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-link text-xs"></i> জরুরী লিংক</h4>
+                <ul class="text-[11px] sm:text-xs space-y-2.5 sm:space-y-3 font-medium">
+                    <li><a href="#" onclick="openAgentPopup('master'); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-angle-right text-[10px] text-gray-600 hidden sm:block"></i> মাস্টার এজেন্ট লিস্ট</a></li>
+                    <li><a href="#" onclick="openAgentPopup('super'); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-angle-right text-[10px] text-gray-600 hidden sm:block"></i> সুপার এজেন্ট লিস্ট</a></li>
+                    <li><a href="#" onclick="openAgentPopup('subadmin'); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-angle-right text-[10px] text-gray-600 hidden sm:block"></i> সাব এডমিন লিস্ট</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-accent-gold font-bold mb-4 sm:mb-5 text-[13px] sm:text-sm uppercase tracking-wider flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-headset text-xs"></i> সাপোর্ট ও পলিসি</h4>
+                <ul class="text-[11px] sm:text-xs space-y-3 sm:space-y-4 font-medium">
+                    <li><a href="#" onclick="openRulesPopup(); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-shield-halved text-gray-600 hidden sm:block"></i> নিয়ম কানুন ও নীতিমালা</a></li>
+                    <li><a href="#" onclick="openCustomerServicePopup(); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-gavel text-gray-600 hidden sm:block"></i> অভিযোগ ও কাস্টমার সার্ভিস</a></li>
+                    <li><a href="#" onclick="openProxyPopup(); return false;" class="hover:text-accent-gold transition flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-globe text-gray-600 hidden sm:block"></i> প্রক্সি লিংক</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-accent-gold font-bold mb-4 sm:mb-5 text-[13px] sm:text-sm uppercase tracking-wider flex items-center justify-center sm:justify-start gap-2"><i class="fa-solid fa-triangle-exclamation text-xs"></i> সতর্কবার্তা</h4>
+                <p class="text-[11px] sm:text-xs leading-relaxed text-gray-400 font-medium bg-[#0f1b2e] p-3 sm:p-4 rounded-lg border border-gray-800/50">
+                    শুধুমাত্র আমাদের ওয়েবসাইটে উল্লেখিত ভেরিফাইড নাম্বার যোগাযোগ করুন। কোনো নকল বা ভুয়া এজেন্টের সাথে লেনদেন করে প্রতারিত হলে <span class="text-white font-bold">velkiagentlist.info</span> কর্তৃপক্ষ দায়ী থাকবে না।
+                </p>
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-[10px] sm:text-[11px] font-medium text-gray-500">
+            <div class="text-center md:text-left mb-4 md:mb-0">&copy; 2026 velkiagentlist.info সর্বসত্ত্ব সংরক্ষিত। একটি বিশ্বস্ত এজেন্ট ভেরিফিকেশন নেটওয়ার্ক।</div>
+            <div class="flex gap-4 sm:gap-5">
+                <a href="#" onclick="openRulesPopup(); return false;" class="hover:text-accent-gold transition">শর্তাবলী</a>
+                <a href="#" onclick="openRulesPopup(); return false;" class="hover:text-accent-gold transition">গোপনীয়তা নীতি</a>
+                <a href="#" onclick="openCustomerServicePopup(); return false;" class="hover:text-accent-gold transition">যোগাযোগ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Define global functions for footer links
+        window.openRulesPopup = () => {
+            const btn = document.querySelector('.rules-btn');
+            if (btn) btn.click();
+        };
+        window.openCustomerServicePopup = () => {
+            const btn = document.querySelector('.cs-btn');
+            if (btn) btn.click();
+        };
+        window.openProxyPopup = () => {
+            const btn = document.querySelector('.proxy-btn');
+            if (btn) btn.click();
+        };
+
+        // Mobile Menu Toggle Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIcon = mobileMenuBtn.querySelector('i');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenuIcon.classList.remove('fa-xmark');
+                mobileMenuIcon.classList.add('fa-bars');
+            } else {
+                mobileMenuIcon.classList.remove('fa-bars');
+                mobileMenuIcon.classList.add('fa-xmark');
+            }
+        });
+
+        // Mobile Dropdown Toggle Logic
+        const mobileAgentListBtn = document.getElementById('mobile-agent-list-btn');
+        const mobileAgentListDropdown = document.getElementById('mobile-agent-list-dropdown');
+        const mobileAgentListIcon = document.getElementById('mobile-agent-list-icon');
+
+        mobileAgentListBtn.addEventListener('click', () => {
+            mobileAgentListDropdown.classList.toggle('hidden');
+            // Toggle rotation of the arrow icon
+            mobileAgentListIcon.classList.toggle('rotate-180');
+        });
+        
+        // Ensure menu is closed when resizing to desktop view
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) { // 1024px is Tailwind's 'lg' breakpoint
+                mobileMenu.classList.add('hidden');
+                mobileMenuIcon.classList.remove('fa-xmark');
+                mobileMenuIcon.classList.add('fa-bars');
+            }
+        });
+
+        // About Popup Logic
+        
+    function buildAboutContent() {
+        if (!dbData) return '';
+        return `
+            <div class="text-left text-sm sm:text-base text-gray-800 max-h-[70vh] overflow-y-auto custom-scrollbar font-sans p-2">
+                <h2 class="text-center text-xl sm:text-2xl font-serif mb-6 text-gray-900 border-b border-gray-300 pb-3">ভেলকি কি?</h2>
+                <div class="bg-white p-4 sm:p-5 rounded-lg border border-gray-200 leading-relaxed text-gray-700">
+                    ${dbData.siteData.aboutVelki}
+                </div>
+            </div>
+        `;
+    }
+
+
+        document.querySelectorAll('.about-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                Swal.fire({
+                    title: '<span class="text-primary-dark font-bold text-xl sm:text-2xl border-b-[3px] border-accent-gold pb-2 inline-block">About Velki / ভেলকি কি?</span>',
+                    html: buildAboutContent(),
+                    width: '800px',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    customClass: { 
+                        popup: 'rounded-xl shadow-2xl',
+                        title: 'pt-4 sm:pt-6 pb-2'
+                    }
+                });
+                
+                if (!mobileMenu.classList.contains('hidden') && window.innerWidth < 1024) {
+                    mobileMenuBtn.click();
+                }
+            });
+        });
+
+        // Proxy Popup Logic
+        
+    function buildProxyContent() {
+        if (!dbData) return '';
+        return `
+            <div class="text-left text-sm sm:text-base text-gray-800 max-h-[70vh] overflow-y-auto custom-scrollbar font-sans p-2">
+                <h2 class="text-center text-xl sm:text-2xl font-serif mb-6 text-gray-900 border-b border-gray-300 pb-3">Proxy Links</h2>
+                <div class="bg-gray-50 p-4 sm:p-5 rounded-lg border border-gray-200 leading-relaxed text-blue-700">
+                    ${dbData.siteData.proxyLinks}
+                </div>
+            </div>
+        `;
+    }
+
+
+        document.querySelectorAll('.proxy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                Swal.fire({
+                    title: '<span class="text-primary-dark font-bold text-xl sm:text-2xl border-b-[3px] border-accent-gold pb-2 inline-block">Proxy Links / প্রক্সি লিংক</span>',
+                    html: buildProxyContent(),
+                    width: '750px',
+                    showCloseButton: true,
+                    showConfirmButton: false, 
+                    customClass: { 
+                        popup: 'rounded-xl shadow-2xl',
+                        title: 'pt-4 sm:pt-6 pb-2'
+                    }
+                });
+                
+                if (!mobileMenu.classList.contains('hidden') && window.innerWidth < 1024) {
+                    mobileMenuBtn.click();
+                }
+            });
+        });
+
+        // Rules Popup Logic
+        
+    function buildRulesContent() {
+        if (!dbData) return '';
+        return `
+            <div class="text-left text-sm sm:text-base text-gray-800 max-h-[70vh] overflow-y-auto custom-scrollbar font-sans p-2">
+                <h2 class="text-center text-xl sm:text-2xl font-serif mb-6 text-gray-900 border-b border-gray-300 pb-3">শর্তাবলী</h2>
+                <div class="bg-white p-4 sm:p-5 rounded-lg border border-gray-200 leading-relaxed text-gray-700">
+                    ${dbData.siteData.rules}
+                </div>
+            </div>
+        `;
+    }
+
+
+        document.querySelectorAll('.rules-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                Swal.fire({
+                    title: '<span class="text-primary-dark font-bold text-xl sm:text-2xl border-b-[3px] border-accent-gold pb-2 inline-block">VELKI – শর্ত ও নিয়মাবলী</span>',
+                    html: buildRulesContent(),
+                    width: '800px',
+                    showCloseButton: true,
+                    confirmButtonText: 'আমি পড়েছি ও সম্মত',
+                    confirmButtonColor: '#0b192c',
+                    customClass: { 
+                        popup: 'rounded-xl shadow-2xl',
+                        title: 'pt-4 sm:pt-6 pb-2',
+                        confirmButton: 'px-6 py-2.5 rounded-lg font-bold tracking-wide shadow-md'
+                    }
+                });
+                
+                // If it was clicked in mobile menu, let's close the mobile menu afterwards
+                if (!mobileMenu.classList.contains('hidden') && window.innerWidth < 1024) {
+                    mobileMenuBtn.click();
+                }
+            });
+        });
+
+        // Backend Verification Logic
+        async function verifyAgent(type, value) {
+            if (!value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'সতর্কতা',
+                    text: 'অনুগ্রহ করে আইডি বা ফোন নাম্বার প্রদান করুন।',
+                    confirmButtonColor: '#0b192c',
+                    customClass: { popup: 'rounded-xl' }
+                });
+                return;
+            }
+
+            try {
+                // Show loading state
+                Swal.fire({
+                    title: 'খোঁজা হচ্ছে...',
+                    text: 'অনুগ্রহ করে অপেক্ষা করুন',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const response = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type, value })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'এজেন্ট ভেরিফাইড!',
+                        html: `
+                            <div class="text-left mt-4 space-y-2 text-sm sm:text-base">
+                                <p><strong>এজেন্ট আইডি:</strong> ${data.agent.id}</p>
+                                <p><strong>ফোন নাম্বার:</strong> <span class="text-green-600 font-bold">${data.agent.phone}</span></p>
+                                <p><strong>স্ট্যাটাস:</strong> <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">${data.agent.status}</span></p>
+                                <p><strong>অ্যাপস:</strong> ${data.agent.apps.join(', ')}</p>
+                            </div>
+                        `,
+                        confirmButtonText: 'ঠিক আছে',
+                        confirmButtonColor: '#25D366',
+                        customClass: { popup: 'rounded-xl' }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'এজেন্ট পাওয়া যায়নি!',
+                        text: data.message,
+                        confirmButtonText: 'আবার চেষ্টা করুন',
+                        confirmButtonColor: '#ef4444',
+                        customClass: { popup: 'rounded-xl' }
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ত্রুটি!',
+                    text: 'সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।',
+                    confirmButtonColor: '#0b192c',
+                    customClass: { popup: 'rounded-xl' }
+                });
+            }
+        }
+
+        document.getElementById('agent-id-btn').addEventListener('click', () => {
+            const type = document.getElementById('agent-type-select').value;
+            const value = document.getElementById('agent-id-input').value;
+            if (!value.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'সতর্কতা',
+                    text: 'অনুগ্রহ করে আইডি প্রদান করুন।',
+                    confirmButtonColor: '#0b192c',
+                    customClass: { popup: 'rounded-xl' }
+                });
+                return;
+            }
+            openAgentPopup(type, value);
+        });
+
+        // Customer Service Popup Logic
+        
+    let csContent = '';
+    function buildCsContent() {
+        if (!dbData) return '';
+        let html = `
+            <div class="text-left text-sm sm:text-base text-gray-800 max-h-[70vh] overflow-y-auto custom-scrollbar font-sans p-1 sm:p-2">
+                <h2 class="text-center text-xl sm:text-2xl font-serif mb-6 text-gray-900 border-b border-gray-300 pb-3">Customer Service</h2>
+                <div class="mb-4 text-center text-gray-600 text-sm font-medium">
+                    ${dbData.siteData.customerServiceText}
+                </div>
+                <div class="border border-gray-800 rounded-sm mb-6 bg-white overflow-hidden">
+                    <div class="bg-[#f0f0f0] px-4 py-2 text-sm sm:text-base text-gray-700 uppercase tracking-wider font-medium border-b border-gray-200">
+                        CUSTOMER SERVICE
+                    </div>
+                    <div class="flex flex-col">`;
+        
+        dbData.siteData.customerServiceList.forEach((cs, idx) => {
+            let bg = idx % 2 === 0 ? 'bg-white' : 'bg-[#f8f9fa]';
+            let cleanPhone = cs.whatsapp.replace(/\D/g, '');
+            html += `
+                        <div class="flex items-center justify-between px-4 py-3 ${bg} border-b border-gray-100 hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-4 sm:gap-12 w-[60%]">
+                                <span class="font-bold text-gray-800">${idx + 1}</span>
+                                <span class="font-bold text-gray-800 text-[11px] sm:text-sm">${cs.name}</span>
+                            </div>
+                            <div class="flex items-center justify-end gap-2 sm:gap-4 w-[40%]">
+                                <a href="https://wa.me/${cleanPhone}" target="_blank" class="hover:scale-110 transition-transform">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm">
+                                </a>
+                                <a href="https://wa.me/${cleanPhone}" target="_blank" class="font-bold text-gray-900 text-[11px] sm:text-sm hover:text-green-600 underline underline-offset-2 decoration-2 decoration-gray-400 hover:decoration-green-500">
+                                    ${cs.whatsapp}
+                                </a>
+                            </div>
+                        </div>`;
+        });
+        
+        html += `
+                    </div>
+                </div>
+                <div class="border border-gray-800 rounded-sm mb-4 bg-white overflow-hidden">
+                    <div class="bg-[#f0f0f0] px-4 py-2 text-sm sm:text-base text-gray-700 uppercase tracking-wider font-medium border-b border-gray-200">
+                        VELKI ADMIN LIST
+                    </div>
+                    <div class="flex flex-col">`;
+        
+        dbData.siteData.velkiAdminList.forEach((ad, idx) => {
+            let bg = idx % 2 === 0 ? 'bg-white' : 'bg-[#f8f9fa]';
+            let cleanPhone = ad.whatsapp.replace(/\D/g, '');
+            html += `
+                        <div class="flex items-center justify-between px-4 py-3 ${bg} border-b border-gray-100 hover:bg-gray-50 transition">
+                            <div class="flex items-center gap-4 sm:gap-12 w-[60%]">
+                                <span class="font-bold text-gray-800">${idx + 1}</span>
+                                <span class="font-bold text-gray-800 text-[11px] sm:text-sm">${ad.name}</span>
+                            </div>
+                            <div class="flex items-center justify-end gap-2 sm:gap-4 w-[40%]">
+                                <a href="https://wa.me/${cleanPhone}" target="_blank" class="hover:scale-110 transition-transform">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm">
+                                </a>
+                                <a href="https://wa.me/${cleanPhone}" target="_blank" class="font-bold text-gray-900 text-[11px] sm:text-sm hover:text-green-600 underline underline-offset-2 decoration-2 decoration-gray-400 hover:decoration-green-500">
+                                    ${ad.whatsapp}
+                                </a>
+                            </div>
+                        </div>`;
+        });
+        
+        html += `
+                    </div>
+                </div>
+            </div>`;
+            
+        return html;
+    }
+
+
+        document.querySelectorAll('.cs-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                Swal.fire({
+                    html: buildCsContent(),
+                    width: '850px',
+                    showCloseButton: true,
+                    showConfirmButton: false,
+                    customClass: { 
+                        popup: 'rounded-xl shadow-2xl p-2 sm:p-4 border-2 border-gray-100',
+                    }
+                });
+                
+                if (!mobileMenu.classList.contains('hidden') && window.innerWidth < 1024) {
+                    mobileMenuBtn.click();
+                }
+            });
+        });
+        // Agent List Popup Logic
+        
+        function generateAgentList(type, filterQuery = '') {
+            let title = '';
+            let listTitle = '';
+            let roleLabel = '';
+            let agents = [];
+            
+            if (!dbData) return '';
+
+            if (type === 'master') {
+                title = 'Master Agent List';
+                listTitle = 'ALL MASTER AGENT LIST';
+                roleLabel = 'MASTER AGENT';
+                agents = dbData.agents.filter(a => a.type === 'master');
+            } else if (type === 'super') {
+                title = 'Super Agent List';
+                listTitle = 'ALL SUPER AGENT LIST';
+                roleLabel = 'SUPER AGENT';
+                agents = dbData.agents.filter(a => a.type === 'super');
+            } else if (type === 'subadmin') {
+                title = 'Sub Admin List';
+                listTitle = 'ALL SUB ADMIN LIST';
+                roleLabel = 'SUB ADMIN';
+                agents = dbData.agents.filter(a => a.type === 'subadmin');
+            }
+
+
+
+            let filteredAgents = agents;
+            if (filterQuery) {
+                const q = filterQuery.toLowerCase().trim();
+                filteredAgents = agents.filter(a => a.id.toLowerCase().includes(q) || roleLabel.toLowerCase().includes(q));
+            }
+
+            let rowsHtml = filteredAgents.length > 0 ? filteredAgents.map((agent, index) => {
+                const bgClass = index % 2 === 0 ? 'bg-white' : 'bg-[#f8f9fa]';
+                
+                return `
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 px-4 py-3 border-b border-gray-200 ${bgClass} hover:bg-gray-50 transition items-center text-sm">
+                        
+                        <!-- Col 1: Name -->
+                        <div class="font-bold text-gray-800 flex justify-between sm:block">
+                            <span class="sm:hidden text-gray-500 text-xs">Name:</span>
+                            ${agent.name ? agent.name : roleLabel}
+                        </div>
+                        
+                        <!-- Col 2: Agent Id -->
+                        <div class="font-bold text-gray-800 text-right sm:text-center flex justify-between sm:block">
+                            <span class="sm:hidden text-gray-500 text-xs">Agent Id:</span>
+                            ${agent.id}
+                        </div>
+
+                        <!-- Col 4: WhatsApp -->
+                        <div class="flex justify-between sm:justify-end items-center">
+                            <span class="sm:hidden text-gray-500 text-xs font-bold">WhatsApp:</span>
+                            <a href="https://wa.me/${agent.phone.replace('+', '')}" target="_blank" class="flex items-center gap-1.5 hover:scale-105 transition">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-4 h-4 drop-shadow-sm">
+                                <span class="font-bold text-gray-900 hover:text-green-600 underline decoration-gray-400">${agent.phone}</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('') : `<div class="p-8 text-center text-red-500 font-bold">No agents found matching "${filterQuery}"</div>`;
+
+            return `
+                <div class="text-left font-sans max-h-[75vh] overflow-y-auto custom-scrollbar p-1">
+                    <h2 class="text-center text-2xl sm:text-3xl font-serif mb-6 text-gray-900">${title}</h2>
+                    
+                    <div class="max-w-md mx-auto mb-8">
+                        <h3 class="text-center text-lg sm:text-xl mb-3 text-gray-800 font-medium">এজেন্ট এর আইডি নাম্বার দিয়ে খুঁজুনঃ</h3>
+                        <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                            <div class="mb-4">
+                                <label class="block text-sm text-gray-600 mb-1">Agent Type:</label>
+                                <select id="search-agent-type" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+                                    <option value="master" ${type === 'master' ? 'selected' : ''}>মাস্টার এজেন্ট</option>
+                                    <option value="super" ${type === 'super' ? 'selected' : ''}>সুপার এজেন্ট</option>
+                                    <option value="subadmin" ${type === 'subadmin' ? 'selected' : ''}>সাব এডমিন</option>
+                                </select>
+                            </div>
+                            <div class="mb-5">
+                                <label class="block text-sm text-gray-600 mb-1">Agent ID:</label>
+                                <input id="search-agent-id" type="text" value="${filterQuery}" placeholder="Search ID or Name..." class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-blue-500">
+                            </div>
+                            <button id="search-agent-submit" class="w-full bg-white hover:bg-gray-50 border border-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition shadow-sm text-sm hover:shadow">
+                                Submit
+                            </button>
+                        </div>
+                        <div class="border-b-2 border-gray-400 w-16 mx-auto mt-6"></div>
+                    </div>
+
+                    <div class="border border-gray-800 rounded-sm bg-white overflow-hidden">
+                        <div class="bg-[#f0f0f0] px-4 py-3 text-sm sm:text-base text-gray-700 uppercase tracking-wider font-medium border-b border-gray-200">
+                            ${listTitle}
+                        </div>
+                        
+                        <!-- Table Header -->
+                        <div class="hidden sm:grid grid-cols-3 gap-4 px-4 py-2 bg-[#e9ecef] border-b-2 border-gray-300 font-bold text-gray-700 text-xs sm:text-sm uppercase tracking-wider">
+                            <div>Name</div>
+                            <div class="text-center">Agent Id</div>
+                            
+                            <div class="text-right">Whatsapp Number</div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            ${rowsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function bindAgentPopupEvents() {
+            const popup = Swal.getPopup();
+            if (!popup) return;
+            
+            const submitBtn = popup.querySelector('#search-agent-submit');
+            const inputField = popup.querySelector('#search-agent-id');
+            const typeSelect = popup.querySelector('#search-agent-type');
+            
+            if (submitBtn && inputField && typeSelect) {
+                submitBtn.addEventListener('click', () => {
+                    smoothUpdatePopup(typeSelect.value, inputField.value);
+                });
+                
+                inputField.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        submitBtn.click();
+                    }
+                });
+
+                typeSelect.addEventListener('change', () => {
+                    smoothUpdatePopup(typeSelect.value, inputField.value);
+                });
+            }
+        }
+
+        function smoothUpdatePopup(type, filterQuery = '') {
+            const htmlContainer = Swal.getHtmlContainer();
+            if (!htmlContainer) return;
+            
+            htmlContainer.style.transition = 'opacity 0.2s ease-in-out';
+            htmlContainer.style.opacity = '0';
+            
+            setTimeout(() => {
+                htmlContainer.innerHTML = generateAgentList(type, filterQuery);
+                bindAgentPopupEvents();
+                htmlContainer.style.opacity = '1';
+            }, 200);
+        }
+
+        function openAgentPopup(type, filterQuery = '') {
+            Swal.fire({
+                html: generateAgentList(type, filterQuery),
+                width: '95%', maxWidth: '900px',
+                showCloseButton: true,
+                showConfirmButton: false,
+                customClass: { 
+                    popup: 'rounded-xl shadow-2xl p-2 sm:p-4 border border-gray-200',
+                },
+                didOpen: () => {
+                    bindAgentPopupEvents();
+                }
+            });
+        }
+
+        function setupAgentListPopup(btnId, type) {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openAgentPopup(type);
+                    
+                    if (!mobileMenu.classList.contains('hidden') && window.innerWidth < 1024) {
+                        mobileMenuBtn.click();
+                    }
+                });
+            }
+        }
+
+        setupAgentListPopup('desktop-master-btn', 'master');
+        setupAgentListPopup('desktop-super-btn', 'super');
+        setupAgentListPopup('desktop-subadmin-btn', 'subadmin');
+        setupAgentListPopup('mobile-master-btn', 'master');
+        setupAgentListPopup('mobile-super-btn', 'super');
+        setupAgentListPopup('mobile-subadmin-btn', 'subadmin');
+        setupAgentListPopup('banner-master-btn', 'master');
+
+    </script>
+</body>
+</html>
