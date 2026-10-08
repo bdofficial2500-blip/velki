@@ -138,8 +138,13 @@ app.get('/', async (req, res) => {
         const num = db.siteData.customerServiceNumber || '';
         const phoneDigits = num.replace(/\D/g, '');
         
+        const fbPage = db.siteData.facebookPage || 'https://www.facebook.com/officialvelkilive/';
+        const fbGroup = db.siteData.facebookGroup || 'https://www.facebook.com/share/g/1HuBm6L1xZ/';
+        
         html = html.replace(/>&nbsp;</g, `>${num}<`);
         html = html.replace(/href="#"/g, `href="https://wa.me/${phoneDigits}"`);
+        html = html.replace('{{FACEBOOK_PAGE}}', fbPage);
+        html = html.replace('{{FACEBOOK_GROUP}}', fbGroup);
         
         let quickAgentsHtml = '';
         if (db.siteData && db.siteData.quickAgents) {

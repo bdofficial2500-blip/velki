@@ -157,6 +157,21 @@
                                 <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold whitespace-nowrap">সেভ</button>
                             </div>
                         </div>
+                        
+                        <!-- Social Links -->
+                        <div class="mt-6 border-t pt-4">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">ফেসবুক পেজ লিংক (Facebook Page)</label>
+                            <div class="flex gap-2 max-w-sm mb-4">
+                                <input type="text" id="input-fb-page" class="w-full border border-gray-300 rounded p-2 text-sm" placeholder="https://www.facebook.com/...">
+                                <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold whitespace-nowrap">সেভ</button>
+                            </div>
+                            
+                            <label class="block text-sm font-bold text-gray-700 mb-1">ফেসবুক গ্রুপ লিংক (Facebook Group)</label>
+                            <div class="flex gap-2 max-w-sm mb-4">
+                                <input type="text" id="input-fb-group" class="w-full border border-gray-300 rounded p-2 text-sm" placeholder="https://www.facebook.com/groups/...">
+                                <button onclick="saveData()" class="bg-accent-green text-white px-4 py-2 rounded shadow text-sm font-bold whitespace-nowrap">সেভ</button>
+                            </div>
+                        </div>
 
                         <!-- Customer Service List -->
                         <div>
@@ -309,8 +324,10 @@
                 renderAgents();
                 
                 // Populate Web Content
-                document.getElementById('input-support-number').value = dbData.siteData.customerServiceNumber;
-                document.getElementById('input-support-text').value = dbData.siteData.customerServiceText;
+                document.getElementById('input-support-number').value = dbData.siteData.customerServiceNumber || '';
+                document.getElementById('input-support-text').value = dbData.siteData.customerServiceText || '';
+                document.getElementById('input-fb-page').value = dbData.siteData.facebookPage || 'https://www.facebook.com/officialvelkilive/';
+                document.getElementById('input-fb-group').value = dbData.siteData.facebookGroup || 'https://www.facebook.com/share/g/1HuBm6L1xZ/';
                 
                 renderCustomerService();
                 renderAdminList();
@@ -412,6 +429,8 @@
         async function saveData() {
             dbData.siteData.customerServiceNumber = document.getElementById('input-support-number').value;
             dbData.siteData.customerServiceText = document.getElementById('input-support-text').value;
+            dbData.siteData.facebookPage = document.getElementById('input-fb-page').value;
+            dbData.siteData.facebookGroup = document.getElementById('input-fb-group').value;
             
             dbData.siteData.quickAgents[0].id = document.getElementById('qa-1-id').value;
             dbData.siteData.quickAgents[0].whatsapp = document.getElementById('qa-1-wa').value;
