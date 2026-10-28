@@ -1,7 +1,33 @@
+# Velki Official Robots Configuration
+# https://velkiagent.ink/
+
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
 Disallow: /private/
 Disallow: /api/
+
+# Explicitly Allow Major Search & AI Crawlers for Maximum Indexing
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
 
 Sitemap: https://velkiagent.ink/sitemap.xml

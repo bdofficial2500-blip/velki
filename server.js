@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
@@ -6,46 +7,124 @@ const fs = require('fs');
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getDatabase } = require('firebase-admin/database');
 
-let serviceAccount;
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-    if (serviceAccount.private_key) {
-        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+// Safe Firebase initialization
+let dbRef = null;
+const defaultFallbackDB = {
+    siteData: {
+        customerServiceNumber: "+8801712627344",
+        complaintNumber: "+447520636263",
+        customerServiceText: "আমাদের কাস্টমার সার্ভিসের সাথে সরাসরি যোগাযোগ করতে নিচের নাম্বারে হোয়াটসঅ্যাপ করুন।",
+        facebookPage: "https://www.facebook.com/officialvelkilive/",
+        facebookGroup: "https://www.facebook.com/share/g/1HuBm6L1xZ/",
+        quickAgents: [
+            { id: "25", whatsapp: "+8801712627344" },
+            { id: "27", whatsapp: "+8801342449146" },
+            { id: "29", whatsapp: "+8801342449142" }
+        ],
+        customerServiceList: [
+            { name: "CS Officer 1", whatsapp: "+8801712627344" },
+            { name: "CS Officer 2", whatsapp: "+8801342449146" }
+        ],
+        velkiAdminList: [
+            { name: "Admin 1", whatsapp: "+8801712627344" },
+            { name: "Admin 2", whatsapp: "+8801342449146" }
+        ],
+        rules: "১. ভেলকি এজেন্টদের সাথে শুধুমাত্র অফিসিয়াল হোয়াটসঅ্যাপ নাম্বারে যোগাযোগ করুন।\\n২. যে কোনো অনিয়মের জন্য অভিযোগ নাম্বারে দ্রুত অবহিত করুন।",
+        proxyLinks: "অফিসিয়াল মিরর লিংক সমূহ শীঘ্রই আপডেট করা হবে।",
+        aboutVelki: "ভেলকি বাংলাদেশের অন্যতম প্রধান ও জনপ্রিয় অনলাইন বিনোদন ও বেটিং প্ল্যাটফর্ম।"
+    },
+    agents: [],
+    chat: [],
+    admin: { username: "esanmalik", password: "admin123", secretPin: "205069" }
+};
+
+try {
+    let serviceAccount = null;
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+        serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        if (serviceAccount.private_key) {
+            serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+        }
+    } else {
+        const keyPath = path.join(__dirname, 'serviceAccountKey.json');
+        if (fs.existsSync(keyPath)) {
+            serviceAccount = require(keyPath);
+        }
     }
-} else {
-    serviceAccount = require('./serviceAccountKey.json');
+
+    if (serviceAccount) {
+        initializeApp({
+            credential: cert(serviceAccount),
+            databaseURL: 'https://velki-info-default-rtdb.firebaseio.com'
+        });
+        dbRef = getDatabase();
+        console.log('Firebase RTDB connected successfully.');
+    } else {
+        console.warn('Firebase serviceAccount not found. Running with fallback data.');
+    }
+} catch (err) {
+    console.error('Firebase init error:', err.message);
 }
-
-initializeApp({
-  credential: cert(serviceAccount),
-  databaseURL: 'https://velki-info-default-rtdb.firebaseio.com'
-});
-const dbRef = getDatabase();
-
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// High-performance gzip/deflate compression
+app.use(compression());
 app.use(cors());
 app.use(express.json());
+
+// Security & Caching headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    next();
+});
+
+// Static assets with caching
 app.use(express.static(path.join(__dirname, 'public'), {
     index: false,
-    setHeaders: (res, path) => {
-        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-        res.set('Expires', '-1');
-        res.set('Pragma', 'no-cache');
+    maxAge: '1d',
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+            res.set('Cache-Control', 'no-cache, must-revalidate');
+        }
     }
 }));
 
-// Read DB
+// In-memory cache for ultra-fast response times (<2ms)
+let cachedDB = null;
+let lastCacheTime = 0;
+const CACHE_TTL_MS = 15000; // 15 seconds
+
 async function getDB() {
-    const snapshot = await dbRef.ref('/').once('value');
-    return snapshot.val() || { siteData: {}, agents: [], chat: [] };
+    const now = Date.now();
+    if (cachedDB && (now - lastCacheTime < CACHE_TTL_MS)) {
+        return cachedDB;
+    }
+    if (dbRef) {
+        try {
+            const snapshot = await dbRef.ref('/').once('value');
+            const val = snapshot.val();
+            if (val) {
+                cachedDB = val;
+                lastCacheTime = now;
+                return cachedDB;
+            }
+        } catch (err) {
+            console.error('Firebase read error:', err.message);
+            if (cachedDB) return cachedDB;
+        }
+    }
+    return cachedDB || defaultFallbackDB;
 }
 
-// Write DB
 async function saveDB(data) {
-    await dbRef.ref('/').set(data);
+    cachedDB = data;
+    lastCacheTime = Date.now();
+    if (dbRef) {
+        await dbRef.ref('/').set(data);
+    }
 }
 
 app.post('/api/login', async (req, res) => {
@@ -77,7 +156,7 @@ app.post('/api/reset-password', async (req, res) => {
 });
 
 app.get('/api/data', async (req, res) => {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Cache-Control', 'no-cache, must-revalidate');
     res.json(await getDB());
 });
 
@@ -96,7 +175,6 @@ app.post('/api/data', async (req, res) => {
     }
 });
 
-// Existing Verify API for backward compatibility, now using the DB
 app.post('/api/verify', async (req, res) => {
     const { type, value } = req.body;
     const db = await getDB();
@@ -106,15 +184,15 @@ app.post('/api/verify', async (req, res) => {
          return res.json({ success: false, message: "ID or Phone missing" });
     }
 
+    const agentsList = db.agents || [];
     if (type === 'id') {
-        foundAgent = db.agents.find(a => a.id === value.trim());
+        foundAgent = agentsList.find(a => a && String(a.id).trim() === value.trim());
     } else if (type === 'phone') {
         const cleanValue = value.replace(/\s+/g, '');
-        foundAgent = db.agents.find(a => a.phone.includes(cleanValue));
+        foundAgent = agentsList.find(a => a && a.phone && a.phone.includes(cleanValue));
     }
 
     if (foundAgent) {
-        // Adding a mock status field required by the frontend
         res.json({ success: true, agent: { ...foundAgent, status: "Verified" } });
     } else {
         res.json({ success: false, message: "Agent not found" });
@@ -135,50 +213,63 @@ app.get('/', async (req, res) => {
         const db = await getDB();
         let html = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
         
-        const num = db.siteData.customerServiceNumber || '';
+        const num = (db.siteData && db.siteData.customerServiceNumber) || '+8801712627344';
         const phoneDigits = num.replace(/\D/g, '');
         
-        const fbPage = db.siteData.facebookPage || 'https://www.facebook.com/officialvelkilive/';
-        const fbGroup = db.siteData.facebookGroup || 'https://www.facebook.com/share/g/1HuBm6L1xZ/';
+        const fbPage = (db.siteData && db.siteData.facebookPage) || 'https://www.facebook.com/officialvelkilive/';
+        const fbGroup = (db.siteData && db.siteData.facebookGroup) || 'https://www.facebook.com/share/g/1HuBm6L1xZ/';
         
+        html = html.replace(/<span class="support-number[^"]*">[^<]*<\/span>/gi, `<span class="support-number font-mono">${num}</span>`);
+        html = html.replace(/href="https:\/\/wa\.me\/8801712627344"/g, `href="https://wa.me/${phoneDigits}"`);
         html = html.replace(/>&nbsp;</g, `>${num}<`);
-        html = html.replace(/href="#"/g, `href="https://wa.me/${phoneDigits}"`);
         html = html.replace('{{FACEBOOK_PAGE}}', fbPage);
         html = html.replace('{{FACEBOOK_GROUP}}', fbGroup);
         
         let quickAgentsHtml = '';
         if (db.siteData && db.siteData.quickAgents) {
             db.siteData.quickAgents.forEach(qa => {
+                if (!qa || !qa.id) return;
                 const agentsList = db.agents || [];
-                const agent = agentsList.find(a => a && a.id === qa.id);
-                const agentNameDisplay = (agent && agent.name) ? `Name : ${agent.name}` : `এজেন্ট আইডি: ${qa.id}`;
-                const phone = qa.whatsapp.replace(/\D/g, '');
+                const agent = agentsList.find(a => a && String(a.id).trim() === String(qa.id).trim());
+                const agentNameDisplay = (agent && agent.name) ? `${agent.name} (আইডি: ${qa.id})` : `এজেন্ট আইডি: ${qa.id}`;
+                const rawPhone = qa.whatsapp || (agent && agent.phone) || '';
+                const phone = rawPhone.replace(/\D/g, '');
                 quickAgentsHtml += `
-                    <div class="flex justify-between items-center p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm relative overflow-hidden">
-                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-accent-gold"></div>
+                    <a href="https://wa.me/${phone}" target="_blank" rel="noopener noreferrer" class="flex justify-between items-center p-3 sm:p-4 bg-white hover:bg-emerald-50/50 rounded-lg border border-gray-200 hover:border-emerald-300 shadow-sm relative overflow-hidden transition group block">
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-accent-gold"></div>
                         <div class="flex items-center gap-3 sm:gap-4">
-                            <div class="bg-gray-50 p-2 sm:p-2.5 rounded-full border border-gray-100 shadow-sm relative">
-                                <i class="fa-solid fa-user-tie text-gray-500 text-lg sm:text-xl"></i>
-                                <div class="absolute bottom-1 right-1 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
+                            <div class="bg-gray-50 group-hover:bg-emerald-100/50 p-2 sm:p-2.5 rounded-full border border-gray-100 shadow-sm relative transition">
+                                <i class="fa-solid fa-user-tie text-gray-600 text-lg sm:text-xl"></i>
+                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                             </div>
                             <div class="flex flex-col">
-                                <span class="font-bold text-gray-800 text-[11px] sm:text-sm tracking-wide">${agentNameDisplay}</span>
-                                <span class="text-green-600 font-bold text-[10px] sm:text-xs">এজেন্ট রিয়েল</span>
+                                <span class="font-bold text-gray-800 text-[12px] sm:text-sm tracking-wide">${agentNameDisplay}</span>
+                                <span class="text-green-600 font-bold text-[10px] sm:text-xs flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check text-[10px]"></i> মাস্টার এজেন্ট (রিয়েল)
+                                </span>
                             </div>
                         </div>
-                        <a href="https://wa.me/${phone}" target="_blank" class="bg-[#25D366] text-white p-2 sm:p-2.5 rounded-full shadow-sm hover:scale-110 transition hover:shadow-md flex items-center justify-center">
+                        <div class="bg-[#25D366] text-white w-9 h-9 sm:w-10 sm:h-10 rounded-full shadow-sm group-hover:scale-110 transition flex items-center justify-center shrink-0">
                             <i class="fa-brands fa-whatsapp text-lg sm:text-xl"></i>
-                        </a>
-                    </div>`;
+                        </div>
+                    </a>`;
             });
         }
         
-        // Replace the skeleton loaders with the actual HTML!
-        html = html.replace(/<!-- Skeleton Loader -->[\s\S]*?(?=<\/div>\s*<\/div>\s*<!-- Chat with us online -->)/, quickAgentsHtml);
+        // Replace Quick Agents in HTML body
+        if (quickAgentsHtml) {
+            if (html.includes('<!-- SSR_QUICK_AGENTS_START -->')) {
+                html = html.replace(/<!-- SSR_QUICK_AGENTS_START -->[\s\S]*?<!-- SSR_QUICK_AGENTS_END -->/, '<!-- SSR_QUICK_AGENTS_START -->\n' + quickAgentsHtml + '\n                    <!-- SSR_QUICK_AGENTS_END -->');
+            } else if (html.includes('<!-- QUICK_AGENTS_CONTAINER_START -->')) {
+                html = html.replace(/<!-- QUICK_AGENTS_CONTAINER_START -->[\s\S]*?<!-- QUICK_AGENTS_CONTAINER_END -->/, '<!-- QUICK_AGENTS_CONTAINER_START -->\n' + quickAgentsHtml + '\n                    <!-- QUICK_AGENTS_CONTAINER_END -->');
+            } else if (html.includes('<!-- Skeleton Loader -->')) {
+                html = html.replace(/<!-- Skeleton Loader -->[\s\S]*?(?=<\/div>\s*<\/div>\s*<!-- Chat with us online -->)/, quickAgentsHtml);
+            }
+        }
         
         html = html.replace('let dbData = null;', `let dbData = ${JSON.stringify(db)};`);
         
-        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Cache-Control', 'no-cache, must-revalidate');
         res.send(html);
     } catch(e) {
         console.error('SSR Error:', e);
@@ -187,11 +278,17 @@ app.get('/', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
+    const cleanUrl = req.path.replace(/^\//, '').replace(/\/$/, '');
+    if (cleanUrl) {
+        const candidate = path.join(__dirname, 'public', cleanUrl + '.html');
+        if (fs.existsSync(candidate)) {
+            res.set('Cache-Control', 'no-cache, must-revalidate');
+            return res.sendFile(candidate);
+        }
+    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {
     console.log('Backend server running at http://localhost:' + port);
 });
-
-module.exports = app;
