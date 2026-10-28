@@ -98,16 +98,90 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Velki Agent List | Official Verified Portal",
-      "url": "https://velkiagent.ink/",
-      "description": "Official verified Velki agent list for online betting, cricket betting, football betting, and live casino in Bangladesh. Find Master, Super, and Sub-admin agents quickly.",
-      "keywords": "velki agent list, online betting, betting sites, online casino, cricket betting, football betting, live sports betting, IPL betting, BPL betting, online slots, live casino, best online betting site in Bangladesh, trusted casino site BD, fast withdrawal betting site",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Velki",
-        "logo": "https://velkiagent.ink/logo.jpg"
-      }
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://velkiagent.ink/#website",
+          "url": "https://velkiagent.ink/",
+          "name": "Velki Agent List | Official Verified Portal",
+          "description": "Official verified Velki agent list for online betting, cricket betting, football betting, and live casino in Bangladesh. Find Master, Super, and Sub-admin agents quickly.",
+          "inLanguage": "bn-BD",
+          "publisher": {
+            "@id": "https://velkiagent.ink/#organization"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://velkiagent.ink/#organization",
+          "name": "Velki Agent Network",
+          "url": "https://velkiagent.ink/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://velkiagent.ink/logo.jpg",
+            "caption": "Velki Official Logo"
+          },
+          "sameAs": [
+            "https://www.facebook.com/officialvelkilive/",
+            "https://www.facebook.com/share/g/1HuBm6L1xZ/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://velkiagent.ink/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "হোম (Home)",
+              "item": "https://velkiagent.ink/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "ভেলকি এজেন্ট লিস্ট (Velki Agent List)",
+              "item": "https://velkiagent.ink/#agent-search"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://velkiagent.ink/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "ভেলকি এজেন্ট লিস্ট (Velki Agent List) কীভাবে যাচাই করব?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "ভেলকি অফিসিয়াল পোর্টাল (velkiagent.ink)-এ এসে এজেন্টের সঠিক আইডি অথবা হোয়াটসঅ্যাপ নাম্বার দিয়ে সার্চ করুন। শুধুমাত্র আমাদের তালিকায় ভেরিফাইড থাকা এজেন্টদের সাথেই লেনদেন করুন।"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "ভেলকি মাস্টার এজেন্ট ও সুপার এজেন্টের কাজ কী?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "সুপার এজেন্টরা মূলত নতুন অ্যাকাউন্ট খোলা ও মাস্টার এজেন্ট নেটওয়ার্ক পরিচালনা করেন। সাধারণ গ্রাহকরা পয়েন্ট ডিপোজিট ও উইথড্রর জন্য সরাসরি ভেরিফাইড মাস্টার এজেন্টদের সাথে যোগাযোগ করে থাকেন।"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "লেনদেন করার সময় প্রতারণা এড়াতে কী কী সতর্কতা অবলম্বন করা উচিত?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "সর্বদা আমাদের ওয়েবসাইটে উল্লেখিত হোয়াটসঅ্যাপ নাম্বারে চ্যাট করুন। কোনো ফেসবুক বা টেলিগ্রামের অপরিচিত ব্যক্তির মাধ্যমে লেনদেন করবেন না এবং প্রতিটি লেনদেনের ট্রানজেকশন আইডি (TrxID) সংরক্ষণ করুন।"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "কোনো এজেন্টের বিরুদ্ধে অভিযোগ থাকলে কীভাবে জানাব?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "আমাদের ওয়েবসাইটের অভিযোগ বাটনে ক্লিক করে কেন্দ্রীয় অভিযোগ প্যানেল হোয়াটসঅ্যাপে যোগাযোগ করুন। অভিযুক্ত এজেন্টের আইডি ও লেনদেনের স্ক্রিনশট পাঠিয়ে দ্রুত অভিযোগ দায়ের করতে পারেন।"
+              }
+            }
+          ]
+        }
+      ]
     }
     </script>
     
@@ -214,8 +288,6 @@
                         <span class="text-accent-gold text-xs sm:text-sm font-semibold tracking-wide mt-0.5">ভেলকি এজেন্ট লিস্ট (Velki Agent List)</span>
                     </div>
                 </div>
-                <p class="text-accent-gold text-sm sm:text-base font-bold mb-4 tracking-wide">velkiagent.ink</p>
-
                 <p class="text-gray-300 text-xs sm:text-sm leading-relaxed mb-2 max-w-sm mx-auto md:mx-0">প্রতারণা এড়াতে লেনদেনের পূর্বে অবশ্যই এজেন্টের আইডি অথবা মোবাইল নাম্বার দিয়ে যাচাই করুন।</p>
                 <p class="text-gray-300 text-xs sm:text-sm font-bold">১০০% বিশ্বস্ত ভেরিফাইড নেটওয়ার্ক।</p>
             </div>
@@ -238,6 +310,77 @@
         <!-- Left Column -->
         <div class="w-full lg:w-[65%] flex flex-col gap-6">
             
+                        <!-- Action Cards Grid (Master, Admin/Sub-Admin, Customer Service, Complaint) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-2">
+                
+                <!-- Card 1: Master Agent -->
+                <div class="bg-[#f5af19] rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 min-h-[190px] relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-950 mb-2 tracking-tight">মাস্টার এজেন্ট</h3>
+                        <p class="text-gray-900 font-medium text-xs sm:text-[13px] leading-relaxed mb-5 max-w-sm">
+                            আমাদের Velki মাস্টার এজেন্টদের সাথে সরাসরি কথা বলতে নিচের বাটনে ক্লিক করুন
+                        </p>
+                    </div>
+                    <div class="relative z-10">
+                        <button onclick="openAgentPopup('master')" class="bg-black hover:bg-gray-900 text-white font-bold px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition-all duration-200 shadow-md hover:scale-105 active:scale-95 cursor-pointer inline-flex items-center gap-1.5">
+                            <span>মাস্টার এজেন্ট লিস্ট</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Admin & Sub-Admin -->
+                <div class="bg-[#f5af19] rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 min-h-[190px] relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-950 mb-2 tracking-tight">এডমিন ও সাব-এডমিন</h3>
+                        <p class="text-gray-900 font-medium text-xs sm:text-[13px] leading-relaxed mb-5 max-w-sm">
+                            আমাদের Velki এডমিন ও সাব-এডমিন আপনার থেকে মাত্র একটি কল দূরে, সরাসরি কথা বলতে নিচের বাটনে ক্লিক করুন
+                        </p>
+                    </div>
+                    <div class="relative z-10">
+                        <button onclick="openAgentPopup('subadmin')" class="bg-black hover:bg-gray-900 text-white font-bold px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition-all duration-200 shadow-md hover:scale-105 active:scale-95 cursor-pointer inline-flex items-center gap-1.5">
+                            <span>এডমিন ও সাব-এডমিন</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Customer Service -->
+                <div class="bg-[#fffcf5] border border-amber-200/70 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 min-h-[190px] relative overflow-hidden group">
+                    <!-- Support Agent Background Photo on the right -->
+                    <div class="absolute right-0 top-0 bottom-0 w-[42%] sm:w-[45%] pointer-events-none overflow-hidden">
+                        <img src="cs-agent.jpg" alt="কাস্টমার সার্ভিস" class="w-full h-full object-cover object-top opacity-85 group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#fffcf5] via-[#fffcf5]/50 to-transparent"></div>
+                    </div>
+                    
+                    <div class="relative z-10 max-w-[68%] sm:max-w-[65%]">
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-950 mb-2 tracking-tight">কাস্টমার সার্ভিস</h3>
+                        <p class="text-gray-700 font-medium text-xs sm:text-[13px] leading-relaxed mb-5">
+                            আপনার যেকোনো ধরনের সমস্যার জন্য অনুগ্রহ করে আমাদের কাস্টমার সার্ভিস এজেন্টদের সাথে যোগাযোগ করুন।
+                        </p>
+                    </div>
+                    <div class="relative z-10">
+                        <button onclick="openCustomerServicePopup()" class="bg-black hover:bg-gray-900 text-white font-bold px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition-all duration-200 shadow-md hover:scale-105 active:scale-95 cursor-pointer inline-flex items-center gap-1.5">
+                            <span>কাস্টমার হেল্প সার্ভিস</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4: Complaint / অভিযোগ -->
+                <div class="bg-[#0e131b] border border-gray-800 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 min-h-[190px] relative overflow-hidden group">
+                    <div class="relative z-10">
+                        <h3 class="text-xl sm:text-2xl font-black text-white mb-2 tracking-tight">অভিযোগ</h3>
+                        <p class="text-gray-300 font-medium text-xs sm:text-[13px] leading-relaxed mb-5">
+                            এজেন্ট, আর্থিক লেনদেন, নতুন একাউন্ট সহ আপনার সব ধরনের সমস্যা ও অভিযোগ জানাতে আমাদের অভিযোগ প্যানেল এজেন্টের সাথে যোগাযোগ করুন। নিম্নের বাটনে ক্লিক করে আপনার অভিযোগটি দায়ের করুন।
+                        </p>
+                    </div>
+                    <div class="relative z-10">
+                        <button onclick="openComplaintPopup()" class="bg-white hover:bg-gray-100 text-gray-950 font-bold px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition-all duration-200 shadow-md hover:scale-105 active:scale-95 cursor-pointer inline-flex items-center gap-1.5">
+                            <span>অভিযোগ করুন</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
             <!-- Page Title Header -->
             <div id="agent-search" class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow-sm border border-gray-100 gap-3 sm:gap-0">
                 <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
@@ -488,6 +631,51 @@
                     <p class="text-gray-500 text-[11px] leading-relaxed">Trusted Casino Site BD with Fast & Secure Withdrawal System</p>
                 </div>
             </div>
+            <!-- FAQ Section for AI SEO & Rich Snippets -->
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question text-accent-gold"></i>
+                    সাধারণ জিজ্ঞাসা ও তথ্য (Frequently Asked Questions - FAQ)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-[13px]">
+                    <div class="bg-gray-50/70 p-4 rounded-lg border border-gray-100">
+                        <div class="font-bold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-green-600 text-xs"></i> ভেলকি এজেন্ট লিস্ট কীভাবে যাচাই করব?
+                        </div>
+                        <p class="text-gray-600 leading-relaxed text-[12px]">
+                            velkiagent.ink পোর্টালে এজেন্টের আইডি অথবা হোয়াটসঅ্যাপ নাম্বার দিয়ে সার্চ করুন। শুধুমাত্র আমাদের তালিকায় ভেরিফাইড থাকা এজেন্টদের সাথেই লেনদেন করুন।
+                        </p>
+                    </div>
+                    
+                    <div class="bg-gray-50/70 p-4 rounded-lg border border-gray-100">
+                        <div class="font-bold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-green-600 text-xs"></i> মাস্টার ও সুপার এজেন্টের কাজ কী?
+                        </div>
+                        <p class="text-gray-600 leading-relaxed text-[12px]">
+                            সুপার এজেন্টরা নতুন অ্যাকাউন্ট ও মাস্টার এজেন্টদের পরিচালনা করেন এবং মাস্টার এজেন্টরা সাধারণ গ্রাহকদের সরাসরি ডিপোজিট ও উইথড্র সেবা দিয়ে থাকেন।
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50/70 p-4 rounded-lg border border-gray-100">
+                        <div class="font-bold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-green-600 text-xs"></i> প্রতারণা এড়াতে কী সতর্কতা মেনে চলবেন?
+                        </div>
+                        <p class="text-gray-600 leading-relaxed text-[12px]">
+                            সর্বদা আমাদের ওয়েবসাইটে উল্লেখিত ভেরিফাইড হোয়াটসঅ্যাপ নাম্বারে চ্যাট করুন এবং প্রতিটি লেনদেনের স্ক্রিনশট ও ট্রানজেকশন আইডি (TrxID) সংরক্ষণ করুন।
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50/70 p-4 rounded-lg border border-gray-100">
+                        <div class="font-bold text-gray-800 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-check text-green-600 text-xs"></i> কোনো এজেন্টের বিরুদ্ধে অভিযোগ করবেন কীভাবে?
+                        </div>
+                        <p class="text-gray-600 leading-relaxed text-[12px]">
+                            আমাদের ওয়েবসাইটের "অভিযোগ" বাটনে ক্লিক করে কেন্দ্রীয় অভিযোগ প্যানেল হোয়াটসঅ্যাপে যোগাযোগ করুন এবং লেনদেনের স্ক্রিনশট ও এজেন্টের আইডি প্রদান করুন।
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -578,6 +766,59 @@
     <!-- Scripts -->
     <script>
         // Define global functions for footer links
+        
+        // Complaint Popup Logic
+        window.openComplaintPopup = () => {
+            let csNum = '+8801712627344';
+            if (typeof dbData !== 'undefined' && dbData && dbData.siteData) {
+                csNum = dbData.siteData.complaintNumber || dbData.siteData.customerServiceNumber || csNum;
+            }
+            const cleanPhone = csNum.replace(/\D/g, '');
+            Swal.fire({
+                html: `
+                    <div class="text-left font-sans p-1 sm:p-2">
+                        <div class="flex items-center gap-3 justify-center mb-4 border-b border-gray-200 pb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-xl font-bold">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">অভিযোগ কেন্দ্র (Complaint Desk)</h2>
+                        </div>
+                        
+                        <p class="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed text-center">
+                            এজেন্ট, আর্থিক লেনদেন বা নতুন অ্যাকাউন্ট সংক্রান্ত যেকোনো সমস্যা ও প্রতারণা প্রতিরোধে সরাসরি আমাদের কেন্দ্রীয় অভিযোগ প্যানেল এজেন্টের সাথে যোগাযোগ করুন।
+                        </p>
+                        
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-3.5 mb-5 text-xs text-red-800 space-y-1.5">
+                            <div class="font-bold flex items-center gap-1.5 text-red-700"><i class="fa-solid fa-circle-exclamation"></i> অভিযোগ করার পূর্বে যা যা প্রস্তুত রাখবেন:</div>
+                            <ul class="list-disc list-inside space-y-1 pl-1 text-gray-700">
+                                <li>অভিযুক্ত এজেন্টের সঠিক আইডি ও নাম</li>
+                                <li>লেনদেনের প্রমাণ / ট্রানজেকশন আইডি (TrxID)</li>
+                                <li>হোয়াটসঅ্যাপে হওয়া কথোপকথনের সম্পূর্ণ স্ক্রিনশট</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex flex-col gap-3">
+                            <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('আসসালামু আলাইকুম, আমি একটি অভিযোগ দায়ের করতে চাই।')}" target="_blank" class="w-full bg-[#25D366] hover:bg-[#1ebd5a] text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2.5 shadow-md transition-transform hover:scale-[1.02] text-sm sm:text-base">
+                                <i class="fa-brands fa-whatsapp text-2xl"></i>
+                                <span>হোয়াটসঅ্যাপে অভিযোগ করুন (${csNum})</span>
+                            </a>
+                            
+                            <button onclick="Swal.close()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition">
+                                বন্ধ করুন
+                            </button>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: '95%',
+                maxWidth: '520px',
+                customClass: {
+                    popup: 'rounded-2xl p-3 sm:p-5 border border-gray-200'
+                }
+            });
+        };
+
         window.openRulesPopup = () => {
             const btn = document.querySelector('.rules-btn');
             if (btn) btn.click();
