@@ -133,6 +133,18 @@
                 if (dbData && dbData.siteData && dbData.siteData.quickAgents) {
                     renderQuickAgents(dbData.siteData.quickAgents, dbData.agents);
                 }
+
+                // Set Facebook Page & Group Links
+                if (dbData && dbData.siteData) {
+                    const fbPage = dbData.siteData.facebookPage || 'https://www.facebook.com/officialvelkilive/';
+                    const fbGroup = dbData.siteData.facebookGroup || 'https://www.facebook.com/share/g/1HuBm6L1xZ/';
+                    document.querySelectorAll('.fb-page-link').forEach(el => {
+                        el.setAttribute('href', fbPage);
+                    });
+                    document.querySelectorAll('.fb-group-link').forEach(el => {
+                        el.setAttribute('href', fbGroup);
+                    });
+                }
                 
             } catch (err) {
                 console.error("Failed to fetch data:", err);
@@ -835,13 +847,13 @@
         </div>
         
         <div class="max-w-6xl mx-auto mt-10 sm:mt-12 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-5 px-4">
-            <a href="{{FACEBOOK_PAGE}}" target="_blank" class="group flex items-center gap-2 text-gray-300 bg-[#0a1526] border border-[#1877F2]/40 hover:border-[#1877F2] px-5 py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(24,119,242,0.3)] w-full sm:w-auto justify-center">
-                <i class="fa-brands fa-facebook text-[#1877F2] text-lg group-hover:scale-110 transition-transform"></i>
-                <span class="font-bold text-xs sm:text-sm tracking-wide group-hover:text-white transition-colors">ফেসবুক পেজ (Page)</span>
+            <a href="https://www.facebook.com/officialvelkilive/" target="_blank" rel="noopener noreferrer" class="fb-page-link group flex items-center gap-2.5 text-gray-200 bg-[#0a1526] hover:bg-[#0f2038] border border-[#1877F2]/40 hover:border-[#1877F2] px-6 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-[0_0_20px_rgba(24,119,242,0.4)] w-full sm:w-auto justify-center active:scale-95">
+                <i class="fa-brands fa-facebook text-[#1877F2] text-xl group-hover:scale-110 transition-transform"></i>
+                <span class="font-bold text-xs sm:text-sm tracking-wide group-hover:text-white transition-colors">ফেসবুক পেজ (Official Page)</span>
             </a>
-            <a href="{{FACEBOOK_GROUP}}" target="_blank" class="group flex items-center gap-2 text-gray-300 bg-[#0a1526] border border-[#1877F2]/40 hover:border-[#1877F2] px-5 py-2 rounded-full transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(24,119,242,0.3)] w-full sm:w-auto justify-center">
+            <a href="https://www.facebook.com/share/g/1HuBm6L1xZ/" target="_blank" rel="noopener noreferrer" class="fb-group-link group flex items-center gap-2.5 text-gray-200 bg-[#0a1526] hover:bg-[#0f2038] border border-[#1877F2]/40 hover:border-[#1877F2] px-6 py-2.5 rounded-full transition-all duration-300 shadow-sm hover:shadow-[0_0_20px_rgba(24,119,242,0.4)] w-full sm:w-auto justify-center active:scale-95">
                 <i class="fa-solid fa-users text-[#1877F2] text-lg group-hover:scale-110 transition-transform"></i>
-                <span class="font-bold text-xs sm:text-sm tracking-wide group-hover:text-white transition-colors">ফেসবুক গ্রুপ (Group)</span>
+                <span class="font-bold text-xs sm:text-sm tracking-wide group-hover:text-white transition-colors">ফেসবুক গ্রুপ (Community Group)</span>
             </a>
         </div>
         

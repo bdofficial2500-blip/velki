@@ -208,6 +208,10 @@ app.get('/admin', (req, res) => {
     }
 });
 
+app.get('/index.html', (req, res) => {
+    res.redirect(301, '/');
+});
+
 app.get('/', async (req, res) => {
     try {
         const db = await getDB();
@@ -222,8 +226,10 @@ app.get('/', async (req, res) => {
         html = html.replace(/<span class="support-number[^"]*">[^<]*<\/span>/gi, `<span class="support-number font-mono">${num}</span>`);
         html = html.replace(/href="https:\/\/wa\.me\/8801712627344"/g, `href="https://wa.me/${phoneDigits}"`);
         html = html.replace(/>&nbsp;</g, `>${num}<`);
-        html = html.replace('{{FACEBOOK_PAGE}}', fbPage);
-        html = html.replace('{{FACEBOOK_GROUP}}', fbGroup);
+        html = html.replace(/{{FACEBOOK_PAGE}}/g, fbPage);
+        html = html.replace(/{{FACEBOOK_GROUP}}/g, fbGroup);
+        html = html.replace(/href="https:\/\/www\.facebook\.com\/officialvelkilive\/"/g, `href="${fbPage}"`);
+        html = html.replace(/href="https:\/\/www\.facebook\.com\/share\/g\/1HuBm6L1xZ\/"/g, `href="${fbGroup}"`);
         
         let quickAgentsHtml = '';
         if (db.siteData && db.siteData.quickAgents) {
